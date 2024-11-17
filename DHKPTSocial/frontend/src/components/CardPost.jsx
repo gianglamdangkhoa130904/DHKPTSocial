@@ -60,7 +60,7 @@ function CardPost(props) {
 
   const fetchVideos = async (postID) => {
     try {
-      const response = await axios.get(`http://localhost:1324/files/${postID}`);
+      const response = await axios.get(`https://dhkptsocial.onrender.com/files/${postID}`);
       setFile(response.data);
       setFileLength(response.data.length);
       // console.log(response.data.length);
@@ -70,7 +70,7 @@ function CardPost(props) {
   };
   const fetchUser = async (userID) => {
     try {
-      const response = await axios.get(`http://localhost:1324/users/${userID}`);
+      const response = await axios.get(`https://dhkptsocial.onrender.com/users/${userID}`);
       setAuthor(response.data.name);
       setAvaAuthor(response.data.avatar)
       setUsername(response.data.username);
@@ -81,7 +81,7 @@ function CardPost(props) {
   };
   const fetchLike = async (user, postID) => {
     try{
-      const response = await axios.get(`http://localhost:1324/likes/${user}/${postID}`);
+      const response = await axios.get(`https://dhkptsocial.onrender.com/likes/${user}/${postID}`);
       
       if(response.data != null){
         // console.log('Người dùng đã like bài post' + postID);
@@ -102,11 +102,11 @@ function CardPost(props) {
       articleID: postID,
       userID: Cookies.get('customerId')
     }
-    axios.post('http://localhost:1324/likes', likes)
+    axios.post('https://dhkptsocial.onrender.com/likes', likes)
     .then((response) => {
 
       const articlePost = {numberOfLike: post.numberOfLike + 1};
-      axios.put(`http://localhost:1324/articles/${postID}`, articlePost)
+      axios.put(`https://dhkptsocial.onrender.com/articles/${postID}`, articlePost)
       .then(() => {
         fetchPost();
         fetchLike(Cookies.get('customerId'), props.postID);
@@ -119,7 +119,7 @@ function CardPost(props) {
         article: postID,
         like: response.data._id
       };
-      axios.post('http://localhost:1324/notifications', notification)
+      axios.post('https://dhkptsocial.onrender.com/notifications', notification)
 
     })
   }
@@ -129,11 +129,11 @@ function CardPost(props) {
       actor: Cookies.get('customerId'),
       like: likeID
     };
-    axios.delete('http://localhost:1324/notifications', { data: notify });
-    axios.delete(`http://localhost:1324/likes/${likeID}`)
+    axios.delete('https://dhkptsocial.onrender.com/notifications', { data: notify });
+    axios.delete(`https://dhkptsocial.onrender.com/likes/${likeID}`)
     .then(() => {
       const articlePost = {numberOfLike: post.numberOfLike - 1};
-      axios.put(`http://localhost:1324/articles/${postID}`, articlePost)
+      axios.put(`https://dhkptsocial.onrender.com/articles/${postID}`, articlePost)
       .then(() => {
         fetchPost();
         fetchLike(Cookies.get('customerId'), props.postID);
@@ -141,7 +141,7 @@ function CardPost(props) {
     });
   }
   const fetchPost = async () => {
-    const response = await axios.get(`http://localhost:1324/articles/all/${postID}`);
+    const response = await axios.get(`https://dhkptsocial.onrender.com/articles/all/${postID}`);
     setPost(response.data);
   }
   const handleTurnRight = () => {
@@ -191,14 +191,14 @@ function CardPost(props) {
         userID: Cookies.get('customerId'),
         commentDetail: comment,
       }
-      axios.post(`http://localhost:1324/comments`, dataComment)
+      axios.post(`https://dhkptsocial.onrender.com/comments`, dataComment)
       .then((response) => {
         // console.log(response.data);
         enqueueSnackbar('Bình luận thành công', { variant: 'success' });
         setComment('');
         // Cập nhật giá trị số lượng bình luận
         const articlePost = {numberOfComment: post.numberOfComment + 1};
-        axios.put(`http://localhost:1324/articles/${postID}`, articlePost)
+        axios.put(`https://dhkptsocial.onrender.com/articles/${postID}`, articlePost)
         .then(() => {
           fetchPost();
           fetchComment(postID);
@@ -211,7 +211,7 @@ function CardPost(props) {
           article: postID,
           comment: response.data._id
         };
-        axios.post('http://localhost:1324/notifications', notification)
+        axios.post('https://dhkptsocial.onrender.com/notifications', notification)
         .then((response) => {
           // console.log(response.data);
         })
@@ -223,7 +223,7 @@ function CardPost(props) {
   }
   const fetchComment = async (postID) => {
     try{
-      const response = await axios.get(`http://localhost:1324/comments/${postID}`);
+      const response = await axios.get(`https://dhkptsocial.onrender.com/comments/${postID}`);
       // console.log(response.data.data);
       setCommentList(response.data.data);
     }
@@ -236,7 +236,7 @@ function CardPost(props) {
     // console.log(Cookies.get('customerId'));
     // console.log(postID);
     try{
-      const response = await axios.get(`http://localhost:1324/reports/${Cookies.get('customerId')}/${postID}`);
+      const response = await axios.get(`https://dhkptsocial.onrender.com/reports/${Cookies.get('customerId')}/${postID}`);
       // console.log("Tìm thấy báo cáo");
       enqueueSnackbar("Bài đăng đã được báo cáo", { variant: 'warning' } );
       onCloseReport();
@@ -253,7 +253,7 @@ function CardPost(props) {
           userID,
           reportDetails
         }
-        axios.post(`http://localhost:1324/reports/`, data)
+        axios.post(`https://dhkptsocial.onrender.com/reports/`, data)
         .then((response) => {
           // console.log(response.data);
           enqueueSnackbar("Báo cáo bài đăng thành công", { variant: 'success' });
@@ -278,13 +278,13 @@ function CardPost(props) {
       actor: Cookies.get('customerId'),
       comment: deleteCommentID
     };
-    axios.delete('http://localhost:1324/notifications', { data: notify });
-    axios.delete(`http://localhost:1324/comments/${deleteCommentID}`)
+    axios.delete('https://dhkptsocial.onrender.com/notifications', { data: notify });
+    axios.delete(`https://dhkptsocial.onrender.com/comments/${deleteCommentID}`)
     .then((response) => {
       onCloseComment();
       setDeleteCommentID('');
       const articlePost = {numberOfComment: post.numberOfComment - 1};
-      axios.put(`http://localhost:1324/articles/${postID}`, articlePost)
+      axios.put(`https://dhkptsocial.onrender.com/articles/${postID}`, articlePost)
       .then(() => {
         fetchPost();
         fetchComment(postID);
@@ -396,10 +396,10 @@ function CardPost(props) {
                   {files.map((file) => (
                         file.filename.includes(".mp4") ? (
                             <video className='w-full object-contain' controls key={file._id} >
-                                <source src={`http://localhost:1324/files/download/${file._id}`} type="video/mp4" />
+                                <source src={`https://dhkptsocial.onrender.com/files/download/${file._id}`} type="video/mp4" />
                             </video>
                         ) : (
-                            <img className='w-full object-contain' src={`http://localhost:1324/files/download/${file._id}` } key={file._id}/>
+                            <img className='w-full object-contain' src={`https://dhkptsocial.onrender.com/files/download/${file._id}` } key={file._id}/>
                         )
                     ))}
                 </div>
@@ -414,7 +414,7 @@ function CardPost(props) {
                   comment.userID._id === Cookies.get('customerId') ? (
                     // Bình luận của người dùng
                     <HStack key={index} w="100%" alignItems="start" mt="2">
-                      <Avatar size={['xs','sm','md']} src={`http://localhost:1324/files/download/${comment.userID?.avatar}`}/>
+                      <Avatar size={['xs','sm','md']} src={`https://dhkptsocial.onrender.com/files/download/${comment.userID?.avatar}`}/>
                       <HStack className='bg-gradient-to-r from-purple-600 to-pink-600' borderRadius="md" p="2" ml="2" w={["60%", "76%", "80%", "87%"]}
                         style={{boxShadow: "5px 5px 5px black"}} >
                         <VStack className=' text-white' w={['70%','80%','85%','90%']} alignItems="start">
@@ -431,7 +431,7 @@ function CardPost(props) {
                   ) : (
                     // Bình luận của người khác
                     <HStack key={index} w="100%" alignItems="start" mt="2">
-                      <Avatar size={['xs','sm','md']} src={`http://localhost:1324/files/download/${comment.userID?.avatar}`}/>
+                      <Avatar size={['xs','sm','md']} src={`https://dhkptsocial.onrender.com/files/download/${comment.userID?.avatar}`}/>
                       <HStack className='bg-white border-2 border-black' borderRadius="md" p="2" ml="2" w={["60%", "76%", "80%", "87%"]}
                         style={{boxShadow: "5px 5px 5px black"}} >
                         <VStack className=' text-black' w={['70%','80%','85%','90%']} alignItems="start">
@@ -453,7 +453,7 @@ function CardPost(props) {
             
           <ModalFooter display='flex' p="0"  className='rounded-b-2xl h-16' >
             <Box className='w-1/2 p-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-bl-2xl flex' h='100%' alignItems='center' pl="30px" pr="30px" pt="10px" pb="10px">
-              <Avatar size={['xs','sm','md']} src={`http://localhost:1324/files/download/${ava_author}`}/>
+              <Avatar size={['xs','sm','md']} src={`https://dhkptsocial.onrender.com/files/download/${ava_author}`}/>
               <Text className='text-black' ml="20px" textColor='white'>{author}</Text>
             </Box>
             <Box className='bg-white w-1/2 rounded-br-2xl flex items-center border-t-2 border-gray-300' h='100%' >
@@ -484,7 +484,7 @@ function CardPost(props) {
         {/* Header của post */}
         <div className="flex items-center p-4">
           <Avatar
-            src={`http://localhost:1324/files/download/${ava_author}`}
+            src={`https://dhkptsocial.onrender.com/files/download/${ava_author}`}
             alt={author}
             className="w-10 h-10 rounded-full"
           />
@@ -552,7 +552,7 @@ function CardPost(props) {
         {/* Header của post */}
         <div className="flex items-center p-4">
           <Avatar
-            src={`http://localhost:1324/files/download/${ava_author}`}
+            src={`https://dhkptsocial.onrender.com/files/download/${ava_author}`}
             alt={author}
             className="w-10 h-10 rounded-full"
           />
@@ -585,13 +585,13 @@ function CardPost(props) {
                   file.filename.includes(".mp4") ? (
                     <div className='md:w-[448px] md:h-[300px] w-[250px] h-[168px]' style={{flex:"none"}}>
                       <video className='object-contain w-full h-full' controls key={file._id} >
-                          <source src={`http://localhost:1324/files/download/${file._id}`} type="video/mp4" />
+                          <source src={`https://dhkptsocial.onrender.com/files/download/${file._id}`} type="video/mp4" />
                       </video>
                     </div>
                       
                   ) : (
                     <div className='md:w-[448px] md:h-[300px] w-[250px] h-[168px]' style={{flex:"none"}}>
-                      <img className='object-contain w-full h-full' src={`http://localhost:1324/files/download/${file._id}` } key={file._id}/>
+                      <img className='object-contain w-full h-full' src={`https://dhkptsocial.onrender.com/files/download/${file._id}` } key={file._id}/>
                     </div> 
                   )
               ))}
@@ -679,10 +679,10 @@ function CardPost(props) {
             {files.map((file) => (
                 file.filename.includes(".mp4") ? (
                     <video className='w-full' autoPlay key={file._id} muted>
-                        <source src={`http://localhost:1324/files/download/${file._id}`} type="video/mp4" />
+                        <source src={`https://dhkptsocial.onrender.com/files/download/${file._id}`} type="video/mp4" />
                     </video>
                 ) : (
-                    <img className='w-full' src={`http://localhost:1324/files/download/${file._id}` } key={file._id}/>
+                    <img className='w-full' src={`https://dhkptsocial.onrender.com/files/download/${file._id}` } key={file._id}/>
                 )
             ))}
             
