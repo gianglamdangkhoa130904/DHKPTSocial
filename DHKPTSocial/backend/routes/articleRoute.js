@@ -103,17 +103,17 @@ const router = express.Router();
 router.post('/', async (request, response) => {
     try {
       if (
-        !request.body.description ||
-        !request.body.userID
+        !request.body.descriptionPost ||
+        !request.body.user
       ) {
         return response.status(400).send({
-          message: 'Send all required fields: User, Publish Date, Description',
+          message: 'Send all required fields: Description, User',
         });
       }
       else{
         const newArticle = {
-            description: request.body.description,
-            userID: request.body.userID
+            description: request.body.descriptionPost,
+            userID: request.body.user
           };
           const article = await Article.create(newArticle);
 
@@ -242,14 +242,6 @@ router.get('/:user_ID', async (request, response) => {
  */
 router.put('/:id', async (request, response) => {
   try {
-    if (
-        !request.body.description
-    ) {
-      return response.status(400).send({
-        message: 'Send all required fields: description',
-      });
-    }
-
     const { id } = request.params;
 
     const result = await Article.findByIdAndUpdate(id, request.body);
@@ -295,6 +287,18 @@ router.delete('/:id', async (request, response) => {
     }
 
     return response.status(200).send({ message: 'Article deleted successfully' });
+  } catch (error) {
+    console.log(error.message);
+    response.status(500).send({ message: error.message });
+  }
+});
+router.get('/all/:id', async (request, response) => {
+  try {
+    const { id } = request.params;
+
+    const result = await Article.findById(id);
+
+    return response.status(200).json(result);
   } catch (error) {
     console.log(error.message);
     response.status(500).send({ message: error.message });

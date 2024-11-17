@@ -1,8 +1,26 @@
 import express from 'express';
 import { User } from '../models/userModel.js';
+import multer from 'multer';
+import { searchUsers, 
+  userProfile,
+  userFollowerandFollowingData,
+  followandUnfollowUser,
+  getNotifications,
+  loginUser}
+  from '../controllers/userControllers.js';
+import { updateUserProfile } from "../controllers/userControllers.js";
+import { upload } from "../middlewares/upload.js"; 
 
 const router = express.Router();
 
+router.get('/notification/:id',getNotifications); 
+router.post('/follow/:id', followandUnfollowUser);
+router.get("/followdata/:id", userFollowerandFollowingData);
+router.get('/profile/:id', userProfile);
+router.put('/:id', upload.single('avatar'), updateUserProfile);
+router.get("/all", searchUsers);
+
+const uploadAvatar = multer();
 /**
  * @swagger
  * components:
@@ -126,64 +144,76 @@ router.post('/', async (request, response) => {
         message: 'Send all required fields: username, password, age, name',
       });
     }
-    if(request.body.avatar && request.body.description){
-      const newUser = {
-        username: request.body.username,
-        password: request.body.password,
-        dob: request.body.dob,
-        name: request.body.name,
-        email: request.body.email,
-        description: request.body.description,
-        avatar: request.body.avatar
-      };
-      const user = await User.create(newUser);
+    const newUser = {
+      username: request.body.username,
+      password: request.body.password,
+      dob: request.body.dob,
+      name: request.body.name,
+      email: request.body.email,
+      description: "",
+      avatar: request.body.avatar
+    };
+    const user = await User.create(newUser);
 
-      return response.status(201).send(user);
-    }
-    if(!request.body.description && !request.body.description){
-      const newUser = {
-        username: request.body.username,
-        password: request.body.password,
-        dob: request.body.dob,
-        name: request.body.name,
-        email: request.body.email,
-        description: "",
-        avatar: ""
-      };
-      const user = await User.create(newUser);
+    return response.status(201).send(user);
+    // if(request.body.avatar && request.body.description){
+    //   const newUser = {
+    //     username: request.body.username,
+    //     password: request.body.password,
+    //     dob: request.body.dob,
+    //     name: request.body.name,
+    //     email: request.body.email,
+    //     description: request.body.description,
+    //     avatar: request.file.buffer.toString("base64")
+    //   };
+    //   const user = await User.create(newUser);
 
-      return response.status(201).send(user);
-    }
-    else{
-      if(request.body.description){
-        const newUser = {
-          username: request.body.username,
-          password: request.body.password,
-          dob: request.body.dob,
-          name: request.body.name,
-          email: request.body.email,
-          description: request.body.description,
-          avatar: ""
-        };
-        const user = await User.create(newUser);
+    //   return response.status(201).send(user);
+    // }
+    // if(!request.body.description && request.file.buffer == null){
+    //   const newUser = {
+    //     username: request.body.username,
+    //     password: request.body.password,
+    //     dob: request.body.dob,
+    //     name: request.body.name,
+    //     email: request.body.email,
+    //     description: "",
+    //     avatar: ""
+    //   };
+    //   const user = await User.create(newUser);
+
+    //   return response.status(201).send(user);
+    // }
+    // else{
+    //   if(request.body.description){
+    //     const newUser = {
+    //       username: request.body.username,
+    //       password: request.body.password,
+    //       dob: request.body.dob,
+    //       name: request.body.name,
+    //       email: request.body.email,
+    //       description: request.body.description,
+    //       avatar: ""
+    //     };
+    //     const user = await User.create(newUser);
   
-        return response.status(201).send(user);
-      }
-      else{
-        const newUser = {
-          username: request.body.username,
-          password: request.body.password,
-          dob: request.body.dob,
-          name: request.body.name,
-          email: request.body.email,
-          description: "",
-          avatar: request.body.avatar
-        };
-        const user = await User.create(newUser);
+    //     return response.status(201).send(user);
+    //   }
+    //   else{
+    //     const newUser = {
+    //       username: request.body.username,
+    //       password: request.body.password,
+    //       dob: request.body.dob,
+    //       name: request.body.name,
+    //       email: request.body.email,
+    //       description: "",
+    //       avatar: request.file.buffer.toString("base64")
+    //     };
+    //     const user = await User.create(newUser);
   
-        return response.status(201).send(user);
-      }
-    }
+    //     return response.status(201).send(user);
+    //   }
+    // }
     
   } catch (error) {
     console.log(error.message);
@@ -296,7 +326,7 @@ router.get('/:id', async (request, response) => {
   try {
     const { id } = request.params;
 
-    const user = await User.findById(id);
+    const user = await User.findById(id).populate('followers').populate('followings');
 
     return response.status(200).json(user);
   } catch (error) {
@@ -415,7 +445,7 @@ router.put('/:id', async (request, response) => {
  * /users/{id}:
  *   delete:
  *     tags: [Users]
- *     summary: Delete a user
+ *     summary: Delete an user
  *     parameters:
  *       - in: path
  *         name: id

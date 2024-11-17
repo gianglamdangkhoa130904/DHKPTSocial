@@ -8,7 +8,8 @@ const messageSchema = mongoose.Schema(
         },
         messageDate:{
             type: Date,
-            required: true
+            required: true,
+            default: Date.now
         },
         messageStatus:{
             type: String,

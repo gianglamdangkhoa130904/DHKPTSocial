@@ -24,12 +24,24 @@ const userSchema = mongoose.Schema(
         },
         description:{
             type: String,
-            required: true
+            required: false
         },
         avatar:{
             type: String,
             required: false
         },
+        followers: [
+            {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "User",
+            },
+          ],
+        followings: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        },
+        ],
     }
 );
 export const User = mongoose.model('User', userSchema);

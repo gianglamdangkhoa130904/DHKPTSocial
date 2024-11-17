@@ -7,7 +7,8 @@ const commentSchema = mongoose.Schema(
             required: true
         },
         userID:{
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
             required: true
         },
         commentDetail:{
@@ -16,7 +17,8 @@ const commentSchema = mongoose.Schema(
         },
         publishDate:{
             type: Date,
-            required: true
+            required: true,
+            default: Date.now
         }
     }
 );
