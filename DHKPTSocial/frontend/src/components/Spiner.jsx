@@ -3,7 +3,7 @@ import React from 'react'
 const Spiner = () => {
   return (
     <div className='flex justify-center'>
-      <div className='animate-ping w-16 h-16 m-8 rounded-full bg-sky-600'></div>
+      <svg className='animate-ping h-5 w-5 bg-white rounded-full'></svg>
     </div>
     
   )

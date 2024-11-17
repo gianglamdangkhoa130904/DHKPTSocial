@@ -1,103 +1,147 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import HomePage from './customer/HomePage'
 import SearchPage from './customer/SearchPage'
 import MessagePage from './customer/MessagesPage'
 import NotificationPage from './customer/NotificationsPage'
 import ProfilePage from './customer/ProfilePage'
 import SettingPage from './customer/SettingPage';
+import CreatePost from './customer/CreatePost';
+import Cookies from 'js-cookie';
+import LogoSvg from '../components/svgs/DHKPTSocial';
+import { FaHome, FaSearch, FaFacebookMessenger, FaUserCircle, FaBell  } from "react-icons/fa";
+import { IoIosAddCircle,IoIosSettings  } from "react-icons/io";
+import { useSnackbar } from 'notistack';
+
 const Home = () => {
-  const handleHome = () => {
-    document.getElementById('home').style.display = 'block';
-    document.getElementById('search').style.display = 'none';
-    document.getElementById('message').style.display = 'none';
-    document.getElementById('notification').style.display = 'none';
-    document.getElementById('profile').style.display = 'none';
-    document.getElementById('setting').style.display = 'none';
+  const [activeTab, setActiveTab] = useState('home');
+  const [inCreate, setCreate] = useState(false);
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setCreate(false);
   };
-  const handleSearch = () => {
-    document.getElementById('search').style.display = 'block';
-    document.getElementById('home').style.display = 'none';
-    document.getElementById('message').style.display = 'none';
-    document.getElementById('notification').style.display = 'none';
-    document.getElementById('profile').style.display = 'none';
-    document.getElementById('setting').style.display = 'none';
+
+  const handleCreate = () => {
+    if (!inCreate) {
+      setCreate(true);
+      setActiveTab('create');
+    }
   };
-  const handleMessage = () => {
-    document.getElementById('message').style.display = 'block';
-    document.getElementById('home').style.display = 'none';
-    document.getElementById('search').style.display = 'none';
-    document.getElementById('notification').style.display = 'none';
-    document.getElementById('profile').style.display = 'none';
-    document.getElementById('setting').style.display = 'none';
-  };
-  const handleNotify = () => {
-    document.getElementById('notification').style.display = 'block';
-    document.getElementById('home').style.display = 'none';
-    document.getElementById('search').style.display = 'none';
-    document.getElementById('message').style.display = 'none';
-    document.getElementById('profile').style.display = 'none';
-    document.getElementById('setting').style.display = 'none';
-  };
-  const handleProfile = () => {
-    document.getElementById('profile').style.display = 'block';
-    document.getElementById('home').style.display = 'none';
-    document.getElementById('search').style.display = 'none';
-    document.getElementById('notification').style.display = 'none';
-    document.getElementById('message').style.display = 'none';
-    document.getElementById('setting').style.display = 'none';
-  };
-  const handleSetting = () => {
-    document.getElementById('setting').style.display = 'block';
-    document.getElementById('home').style.display = 'none';
-    document.getElementById('search').style.display = 'none';
-    document.getElementById('notification').style.display = 'none';
-    document.getElementById('message').style.display = 'none';
-    document.getElementById('profile').style.display = 'none';
-  };
+
+  useEffect(() => {
+    const id = Cookies.get('customerId');
+    const name = Cookies.get('customerName');
+    if (id === undefined && name === undefined) {
+      navigate('/login');
+      enqueueSnackbar('Hãy đăng nhập', { variant: 'error' });
+    }
+  }, [navigate, enqueueSnackbar]);
+
+  const menuItems = [
+    { id: 'home', label: 'Trang chủ', icon: FaHome },
+    { id: 'search', label: 'Tìm kiếm', icon: FaSearch },
+    { id: 'message', label: 'Tin nhắn', icon: FaFacebookMessenger },
+    { id: 'notification', label: 'Thông báo', icon: FaBell },
+    { id: 'profile', label: 'Trang cá nhân', icon: FaUserCircle },
+    { id: 'create', label: 'Tạo bài viết', icon: IoIosAddCircle },
+  ];
   return (
-    <div className='flex'>
-      <div className='w-1/5 h-screen text-white'>
-        <ul>
-          <li onClick={handleHome} className='text-xl p-4 font-bold rounded-tr-lg bg-red-200 hover:cursor-pointer'>
-            Home
-          </li>
-          <li onClick={handleSearch} className='text-xl p-4 font-bold bg-red-200 hover:cursor-pointer'>
-            Search
-          </li>
-          <li onClick={handleMessage} className='text-xl p-4 font-bold bg-red-200 hover:cursor-pointer'>
-            Messages
-          </li>
-          <li onClick={handleNotify} className='text-xl p-4 font-bold bg-red-200 hover:cursor-pointer'>
-            Notifications
-          </li>
-          <li onClick={handleProfile} className='text-xl p-4 font-bold bg-red-200 hover:cursor-pointer'>
-            Profile
-          </li>
-          <li onClick={handleSetting} className='text-xl p-4 font-bold rounded-br-lg bg-red-200 hover:cursor-pointer'>
-            Settings
-          </li>
-        </ul>
+    <div>
+      <div className="min-h-screen bg-gradient-to-r from-purple-600 to-pink-600">
+        {/* Sidebar */}
+        <div className="fixed left-0 top-0 h-full w-64 bg-gray-900/90 backdrop-blur-sm md:block hidden">
+          <div className="p-4">
+            <div className="flex items-center space-x-2 mb-8">
+              <LogoSvg className="w-8 h-8" />
+            </div>
+            
+            <nav className="space-y-2">
+              {menuItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => item.id === 'create' ? handleCreate() : handleTabChange(item.id)}
+                  className={`
+                    w-full px-4 py-3 flex items-center space-x-3 rounded-lg
+                    transition-all duration-200 ease-in-out
+                    ${activeTab === item.id ? 
+                      'bg-gradient-to-r from-purple-500/30 to-pink-500/30 text-white shadow-lg shadow-pink-500/20' : 
+                      'text-gray-300 hover:bg-white/10'
+                    }
+                  `}
+                >
+                  <item.icon className={`text-xl ${activeTab === item.id ? 'text-pink-300' : 'text-gray-400'}`} />
+                  <span className="font-medium">{item.label}</span>
+                </button>
+              ))}
+            </nav>
+          </div>
+
+          <button
+            onClick={() => handleTabChange('setting')}
+            className="absolute bottom-4 left-4 right-4 px-4 py-3 flex items-center space-x-3 rounded-lg
+              text-gray-300 hover:bg-white/10 transition-all duration-200 ease-in-out"
+          >
+            <IoIosSettings className="text-xl text-gray-400" />
+            <span className="font-medium">Cài đặt</span>
+          </button>
+        </div>
+
+        {/* Main Content */}
+        <div className="md:ml-64 min-h-screen">
+          <div className="max-w-4xl mx-auto">
+            <div className="md:pb-2 pb-24">
+              {activeTab === 'home' && <HomePage />}
+              {activeTab === 'search' && <SearchPage />}
+              {activeTab === 'message' && <MessagePage />}
+              {activeTab === 'notification' && <NotificationPage />}
+              {activeTab === 'profile' && <ProfilePage />}
+              {activeTab === 'setting' && <SettingPage />}
+              {inCreate && <CreatePost />}
+            </div>
+          </div>
+        </div>
       </div>
-      <div className='w-4/5 block' id='home' >
-        <HomePage/>
-      </div>
-      <div className='w-4/5 hidden' id='search'>
-        <SearchPage/>
-      </div>
-      <div className='w-4/5 hidden' id='message'>
-        <MessagePage/>
-      </div>
-      <div className='w-4/5 hidden' id='notification'>
-        <NotificationPage/>
-      </div>
-      <div className='w-4/5 hidden' id='profile'>
-        <ProfilePage/>
-      </div>
-      <div className='w-4/5 hidden' id='setting'>
-        <SettingPage/>
+      {/* Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-gray-900/90 backdrop-blur-sm py-2 px-4 flex justify-around sm:justify-evenly md:justify-center lg:justify-around md:hidden">
+        {menuItems.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => item.id === 'create' ? handleCreate() : handleTabChange(item.id)}
+            className={`
+              flex flex-col items-center space-y-1 rounded-lg px-3 py-2
+              transition-all duration-200 ease-in-out
+              ${activeTab === item.id ? 
+                'bg-gradient-to-r from-purple-500/30 to-pink-500/30 text-white shadow-lg shadow-pink-500/20' : 
+                'text-gray-300 hover:bg-white/10'
+              }
+            `}
+          >
+            <item.icon className={`text-xl ${activeTab === item.id ? 'text-pink-300' : 'text-gray-400'}`} />
+            <span className="text-xs font-medium">{item.label}</span>
+          </button>
+        ))}
+        <button
+          onClick={() => handleTabChange('setting')}
+          className={`
+            flex flex-col items-center space-y-1 rounded-lg px-3 py-2
+            transition-all duration-200 ease-in-out
+            ${activeTab === 'setting' ? 
+              'bg-gradient-to-r from-purple-500/30 to-pink-500/30 text-white shadow-lg shadow-pink-500/20' : 
+              'text-gray-300 hover:bg-white/10'
+            }
+          `}
+        >
+          <IoIosSettings className="text-xl text-gray-400" />
+          <span className="text-xs font-medium">Cài đặt</span>
+        </button>
       </div>
     </div>
+    
+
+    
   )
 }
 
