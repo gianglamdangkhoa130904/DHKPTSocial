@@ -20,7 +20,7 @@ const app = express();
 const server = http.createServer(app); // Tạo server HTTP
 const io = new Server(server, {
     cors: {
-        origin: "https://dkkptsocial.netlify.app", // Đảm bảo đúng cổng của frontend
+        origin: "http://localhost:5173", // Đảm bảo đúng cổng của frontend
         credentials: true,
     },
 });
@@ -29,7 +29,7 @@ const io = new Server(server, {
 app.use(express.json());
 app.use(
     cors({
-        origin: "https://dkkptsocial.netlify.app",
+        origin: "http://localhost:5173",
         credentials: true,
     })
 );
