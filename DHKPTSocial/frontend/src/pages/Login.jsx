@@ -124,11 +124,11 @@ const Login = () => {
     {/* Login Form Section */}
     <div className="w-full lg:w-1/2 flex flex-col justify-center px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="text-center text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
-          Welcome Back
+        <h2 style={{height:"45px"}} className="text-center text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+          Chào mừng trở lại
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Sign in to continue to your account
+          Đăng nhập để tiếp tục với tài khoản của bạn
         </p>
       </div>
 
@@ -138,39 +138,39 @@ const Login = () => {
             {/* Username Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Username
+                Tên đăng nhập
               </label>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white/50 backdrop-blur-sm transition-all"
-                placeholder="Enter your username"
+                placeholder="Nhập tên đăng nhập"
               />
             </div>
 
             {/* Password Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Password
+                Mật khẩu
               </label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white/50 backdrop-blur-sm transition-all"
-                placeholder="Enter your password"
+                placeholder="Nhập mật khẩu"
               />
             </div>
 
             {/* Forgot Password Link */}
-            <div className="flex items-center justify-end">
+            {/* <div className="flex items-center justify-end">
               <button
                 className="text-sm font-semibold text-purple-600 hover:text-pink-600 transition-colors"
               >
                 Forgot your password?
               </button>
-            </div>
+            </div> */}
 
             {/* Login Button */}
             <div>
@@ -179,17 +179,17 @@ const Login = () => {
                 disabled={loading}
                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transform transition-all hover:scale-105"
               >
-                {loading ? <Spiner/> : 'Sign In'}
+                {loading ? <Spiner/> : 'Đăng nhập'}
               </button>
             </div>
 
             {/* Register Link */}
             <div className="text-sm text-center">
-              <span className="text-gray-600">Don't have an account? </span>
+              <span className="text-gray-600">Chưa có tài khoản? </span>
               <Link to='/register'>
                 <button
                   className="font-semibold text-purple-600 hover:text-pink-600 transition-colors">
-                  Sign up
+                  Đăng ký
                 </button>
               </Link>
             </div>

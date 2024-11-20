@@ -29,6 +29,22 @@ router.post('/', async (request, response) => {
       response.status(500).send({ message: error.message });
     }
   });
+  router.put('/:id', async (request, response) => {
+    try {
+      const { id } = request.params;
+  
+      const result = await Comment.findByIdAndUpdate(id, request.body);
+  
+      if (!result) {
+        return response.status(404).json({ message: 'Comment not found' });
+      }
+  
+      return response.status(200).send({ message: 'Comment updated successfully' });
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+    }
+  });
 //Route for deleting a comment
 router.delete('/:id', async (request, response) => {
     try {

@@ -143,6 +143,33 @@ export const followandUnfollowUser = TryCatch(async (req, res) => {
     res.json({ message: "Đã theo dõi" });
   }
 });
+export const getMutualFollows = async (req, res) => {
+  const { currentUserId } = req.query;
+
+  try {
+      // Lấy thông tin người dùng hiện tại
+      const currentUser = await User.findById(currentUserId);
+
+      if (!currentUser) {
+          return res
+              .status(404)
+              .json({ message: "Người dùng không tồn tại" });
+      }
+
+      // Lấy danh sách người dùng mà bạn theo dõi và cũng theo dõi bạn
+      const mutualFollows = await User.find({
+          _id: { $in: currentUser.followings }, // Người bạn đang theo dõi
+          followings: currentUserId, // Và họ cũng đang theo dõi bạn
+      }).select("name email avatar");
+
+      res.status(200).json(mutualFollows);
+  } catch (error) {
+      console.error("Error fetching mutual follows:", error);
+      res.status(500).json({
+          message: "Lỗi khi lấy danh sách người nhắn tin",
+      });
+  }
+};
 export const getNotifications = TryCatch(async (req, res) => {
   const notifications = await Notify.findById({ userId: req.user._id })
     .sort({ timestamp: -1 }) // Sắp xếp theo thời gian mới nhất

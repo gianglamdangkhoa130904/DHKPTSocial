@@ -62,6 +62,10 @@ const CreatePost = () => {
         if(descriptionPost === ''){
             enqueueSnackbar('Nhập mô tả bài đăng', { variant: 'error' });
             setLoading(false);
+        }
+        else if(descriptionPost.length > 200){
+          enqueueSnackbar('Mô tả bài đăng không dài quá 200 ký tự', { variant: 'error' });
+          setLoading(false);
           }
           else if (!file){
             enqueueSnackbar('Thêm hình ảnh hoặc video', { variant: 'error' });
@@ -143,25 +147,25 @@ const CreatePost = () => {
               {listMedia.length != 0 ? (<div className='hidden'></div>) : (
                 <button onClick={() => imgRef.current.click()} 
                 className='hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600
-                bg-black rounded-lg text-white p-2 mb-4'>Add Mediums</button>
+                bg-black rounded-lg text-white p-2 mb-4'>Thêm hình ảnh và video</button>
               )}
               <input className='hidden' type="file" onChange={handleFileChange} ref={imgRef} multiple accept="image/*,video/*"/>
               <p className='font-bold'>Description:</p>
               <div className='p-2 border-2 rounded-lg shadow-lg'>
-                <textarea type='text' onChange={handleDescription} className=' h-24 w-full resize-none focus:outline-none' value={descriptionPost}></textarea>
+                <textarea maxLength={200} type='text' onChange={handleDescription} className=' h-24 w-full resize-none focus:outline-none' value={descriptionPost}></textarea>
               </div>
               {listMedia.length != 0 ? (
                 !loading ? (
                 <button onClick={handleUpload} className=' px-6 py-2 bg-black text-white rounded-lg mt-2
-                hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600'>Upload</button>
+                hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600'>Đăng tải</button>
                 ):(
-                <button onClick={handleUpload} className=' px-6 py-2 bg-black text-white rounded-lg mt-2
+                <button onClick={handleUpload} className=' px-6 py-4 bg-black text-white rounded-lg mt-2
                 hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600'><Spiner/></button>
                 )
 
               ): (
                 <button onClick={handleUpload} className='hidden px-6 py-2 bg-black text-white rounded-lg mt-2
-                hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600'>Upload</button>
+                hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600'>Đăng tải</button>
               )}
               
           </div>

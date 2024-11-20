@@ -80,7 +80,18 @@ function MessagesPage() {
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
     };
-
+    useEffect(() => {
+        axios
+            .get(
+                `https://dhkptsocial.onrender.com/users/mutual-follows?currentUserId=${currentUserId}`
+            )
+            .then((response) => {
+                setContacts(response.data); // Gán danh sách mutual follows
+            })
+            .catch((error) => {
+                console.error("Error fetching mutual follows:", error);
+            });
+    }, [currentUserId]);
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
@@ -192,9 +203,9 @@ function MessagesPage() {
   };
 
     return (
-        <div className="flex flex-col md:flex-row h-screen">
+        <div className="flex flex-col md:flex-row md:h-screen ">
             <div className="w-full md:w-1/3 bg-black text-white p-4 overflow-y-auto border-r border-gray-700">
-                <h2 className="text-2xl font-bold mb-4">Messages</h2>
+                <h2 className="text-2xl font-bold mb-4">Tin nhắn</h2>
                 {contacts.map((contact) => (
                     <div
                         key={contact._id}
@@ -223,7 +234,7 @@ function MessagesPage() {
                 ))}
             </div>
 
-            <div className="w-full md:w-2/3 flex flex-col bg-black text-white">
+            <div className="w-full md:w-2/3 flex flex-col bg-black text-white md:h-full h-[500px]">
                 {selectedContact ? (
                     <>
                         {/* Header của hộp chat */}

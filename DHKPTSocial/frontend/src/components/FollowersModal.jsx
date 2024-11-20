@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';  // Nhập PropTypes
 import cancel from '../assets/cancel.png';
+import { useNavigate } from 'react-router-dom';
 
 const FollowersModal = ({ isOpen, onClose, followers }) => {
   // if (!isOpen) return null;
-
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredFollowers, setFilteredFollowers] = useState(followers);
 
@@ -14,7 +15,6 @@ const FollowersModal = ({ isOpen, onClose, followers }) => {
       onClose();
     }
   };
-
   // Tìm kiếm người theo dõi
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -32,6 +32,7 @@ const FollowersModal = ({ isOpen, onClose, followers }) => {
   }, [searchTerm, followers]);
 
   return (
+    isOpen &&(
     <div
       id="modal-overlay"
       className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50 backdrop-blur"
@@ -66,8 +67,8 @@ const FollowersModal = ({ isOpen, onClose, followers }) => {
             <span className="text-gray-400 text-center text-[20px]">Không tìm thấy kết quả.</span>
           ) : (
             filteredFollowers.map((follower, index) => (
-              <div key={index} className="flex items-center gap-3">
-                <img src={follower.avatar} alt={follower.name} className="rounded-full" style={{ width: '60px', height: '60px' }} />
+              <div key={index} className="flex items-center gap-3" onClick={() => navigate(`/users/${follower._id}`)}>
+                <img src={`https://dhkptsocial.onrender.com/files/download/${follower.avatar}`} alt={follower.name} className="rounded-full" style={{ width: '60px', height: '60px' }} />
                 <div className="flex flex-col">
                   <span className="text-white text-[20px]">{follower.name}</span>
                   <span className="text-gray-400">{follower.fullname}</span>
@@ -77,7 +78,7 @@ const FollowersModal = ({ isOpen, onClose, followers }) => {
           )}
         </div>
       </div>
-    </div>
+    </div>)
   );
 };
 

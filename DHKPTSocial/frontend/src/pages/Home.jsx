@@ -92,7 +92,7 @@ const Home = () => {
         {/* Main Content */}
         <div className="md:ml-64 min-h-screen">
           <div className="max-w-4xl mx-auto">
-            <div className="md:pb-2 pb-24">
+            <div className="md:pb-0 pb-12">
               {activeTab === 'home' && <HomePage />}
               {activeTab === 'search' && <SearchPage />}
               {activeTab === 'message' && <MessagePage />}
@@ -120,24 +120,18 @@ const Home = () => {
             `}
           >
             <item.icon className={`text-xl ${activeTab === item.id ? 'text-pink-300' : 'text-gray-400'}`} />
-            <span className="text-xs font-medium">{item.label}</span>
+            {/* <span className="text-xs font-medium">{item.label}</span> */}
           </button>
         ))}
-        <button
-          onClick={() => handleTabChange('setting')}
-          className={`
-            flex flex-col items-center space-y-1 rounded-lg px-3 py-2
-            transition-all duration-200 ease-in-out
-            ${activeTab === 'setting' ? 
-              'bg-gradient-to-r from-purple-500/30 to-pink-500/30 text-white shadow-lg shadow-pink-500/20' : 
-              'text-gray-300 hover:bg-white/10'
-            }
-          `}
-        >
-          <IoIosSettings className="text-xl text-gray-400" />
-          <span className="text-xs font-medium">Cài đặt</span>
-        </button>
+        
       </div>
+      <button
+            onClick={() => handleTabChange('setting')}
+            className="absolute top-2 right-2 px-2 py-2 rounded-lg text-white
+               hover:bg-black transition-all duration-200 ease-in-out md:hidden"
+          >
+            <IoIosSettings className="text-xl text-white" />
+        </button>
     </div>
     
 

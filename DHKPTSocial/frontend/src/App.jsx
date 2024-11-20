@@ -10,6 +10,7 @@ import ListUser from './pages/ListUser';
 import Login from './pages/Login'
 import EditProfilePage from'./pages/customer/EditProfilePage';
 import UserProfilePage from'./pages/customer/UserProfilePage';
+import PostDetails from './pages/customer/PostDetails'
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
         <Route path='/register' element={<Register/>}/>
         <Route path='/edit/:id' element={<EditProfilePage/>}/>
         <Route path='/users/:id' element={<UserProfilePage/>}/>
+        <Route path='/article' element={<PostDetails/>}/>
       </Routes>
   )
 }

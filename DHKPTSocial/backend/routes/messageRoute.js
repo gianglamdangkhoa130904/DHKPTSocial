@@ -17,12 +17,12 @@ router.get("/lastMessage/:userId/:contactId", async (request, response) => {
                 .json({ message: "Thiếu userId hoặc contactId" });
         }
 
-        console.log(
-            "Truy vấn lastMessage với userId:",
-            userId,
-            "và contactId:",
-            contactId
-        );
+        // console.log(
+        //     "Truy vấn lastMessage với userId:",
+        //     userId,
+        //     "và contactId:",
+        //     contactId
+        // );
 
         const lastMessage = await Message.find({
             $or: [

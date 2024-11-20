@@ -65,6 +65,12 @@ const Register = () => {
   
     return lengthCheck && upperCaseCheck && lowerCaseCheck && numberCheck && specialCharCheck;
   }
+  function isNotUsername(username){
+    const lengthCheck = username.length < 9 || username.length > 20;
+    const specialCharCheck = /[!@#$%^&*(),.?":{}|<>]/.test(username);
+    const numberCheck = /[0-9]/.test(username[0]);
+    return lengthCheck || specialCharCheck || numberCheck;
+  }
   const handleRegister = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if(avatar === ''){
@@ -91,8 +97,8 @@ const Register = () => {
     else if(username === ''){
       enqueueSnackbar('Thiếu tên đăng nhập', {variant: 'warning'});
     }
-    else if(!isValidText(username)){
-      enqueueSnackbar('Tên đăng nhập phải gồm chữ hoa, chữ thường, số, ký tự đặc biệt và có độ dài lớn hơn 8, bé hơn 20 ký tự', {variant: 'warning'});
+    else if(isNotUsername(username)){
+      enqueueSnackbar('Tên đăng nhập không có ký tự đặc biệt và có độ dài lớn hơn 8, bé hơn 20 ký tự', {variant: 'warning'});
     }
     else if(password === ''){
       enqueueSnackbar('Thiếu mật khẩu', {variant: 'warning'});
@@ -138,11 +144,11 @@ const Register = () => {
     <>
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
-          Join Our Community
+        <h2 style={{height:"45px"}} className="mt-6 text-center text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+          Tham gia cùng chúng tôi
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Connect with friends and the world around you
+          Kết nối với bạn bè và thế giới xung quanh bạn
         </p>
       </div>
 
@@ -178,27 +184,27 @@ const Register = () => {
                 accept="image/*"
                 onChange={handleAvatar}
               />
-              <p className="mt-2 text-sm text-gray-500">Upload your profile picture</p>
+              <p className="mt-2 text-sm text-gray-500">Tải lên ảnh đại diện của bạn</p>
             </div>
 
             {/* Form Fields */}
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Full Name
+                  Họ và tên
                 </label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white/50 backdrop-blur-sm transition-all"
-                  placeholder="Enter your full name"
+                  placeholder="Nhập vào họ và tên"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Date of Birth
+                  Ngày sinh
                 </label>
                 <input
                   type="date"
@@ -210,7 +216,7 @@ const Register = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Email
+                  Email cá nhân
                 </label>
                 <input
                   type="email"
@@ -223,40 +229,40 @@ const Register = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Username
+                  Tên đăng nhập
                 </label>
                 <input
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white/50 backdrop-blur-sm transition-all"
-                  placeholder="Choose a username"
+                  placeholder="Chọn tên đăng nhập"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Password
+                  Mật khẩu
                 </label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white/50 backdrop-blur-sm transition-all"
-                  placeholder="Create a password"
+                  placeholder="Tạo mật khẩu"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Confirm Password
+                  Xác nhận mật khẩu
                 </label>
                 <input
                   type="password"
                   value={repassword}
                   onChange={(e) => setRepassword(e.target.value)}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white/50 backdrop-blur-sm transition-all"
-                  placeholder="Confirm your password"
+                  placeholder="Nhập lại mật khẩu"
                 />
               </div>
             </div>
@@ -267,16 +273,16 @@ const Register = () => {
                 disabled={loading}
                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transform transition-all hover:scale-105"
               >
-                {loading ? <Spinner/> : 'Create Account'}
+                {loading ? <Spinner/> : 'Tạo tài khoản mới'}
               </button>
             </div>
 
             <div className="text-sm text-center">
-              <span className="text-gray-600">Already have an account? </span>
+              <span className="text-gray-600">Bạn đã có tài khoản? </span>
               <Link to={`/login`}>
               <button
                 className="font-semibold text-purple-600 hover:text-pink-600 transition-colors">
-                Sign in
+                Đăng nhập
               </button>
               </Link>
               

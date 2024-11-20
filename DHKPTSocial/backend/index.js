@@ -10,6 +10,7 @@ import notifyRoute from "./routes/notifyRoute.js";
 import fileRoute from "./routes/fileRoutes.js";
 import reportRoute from "./routes/reportRoute.js";
 import messageRoute from "./routes/messageRoute.js";
+import searchRoute from "./routes/searchRoute.js";
 import cors from "cors";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
@@ -20,7 +21,7 @@ const app = express();
 const server = http.createServer(app); // Tạo server HTTP
 const io = new Server(server, {
     cors: {
-        origin: "https://dkkptsocial.netlify.app", // Đảm bảo đúng cổng của frontend
+        origin: "http://localhost:5173", // Đảm bảo đúng cổng của frontend
         credentials: true,
     },
 });
@@ -29,7 +30,7 @@ const io = new Server(server, {
 app.use(express.json());
 app.use(
     cors({
-        origin: "https://dkkptsocial.netlify.app",
+        origin: "http://localhost:5173",
         credentials: true,
     })
 );
@@ -70,6 +71,7 @@ app.use("/notifications", notifyRoute);
 app.use("/files", fileRoute);
 app.use("/reports", reportRoute);
 app.use("/messages", messageRoute);
+app.use("/search", searchRoute);
 
 // **Socket.IO Logic**
 io.on("connection", (socket) => {

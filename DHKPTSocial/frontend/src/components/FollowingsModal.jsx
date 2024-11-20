@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import cancel from '../assets/cancel.png';
+import { useNavigate } from 'react-router-dom';
 
 const FollowingsModal = ({ isOpen, onClose, followings }) => {
-  // if (!isOpen) return null;
-
+  //if (!isOpen) return null;
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredFollowings, setFilteredFollowings] = useState(followings);
 
@@ -31,7 +32,8 @@ const FollowingsModal = ({ isOpen, onClose, followings }) => {
   }, [searchTerm, followings]);
 
   return (
-    <div
+    isOpen && (
+      <div
       id="modal-overlay"
       className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50 backdrop-blur"
       onClick={handleCloseOutside}
@@ -65,8 +67,8 @@ const FollowingsModal = ({ isOpen, onClose, followings }) => {
             <span className="text-gray-400 text-center text-[20px]">Không tìm thấy kết quả.</span>
           ) : (
             filteredFollowings.map((following, index) => (
-              <div key={index} className="flex items-center gap-3">
-                <img src={following.avatar} alt={following.name} className="rounded-full" style={{ width: '60px', height: '60px' }} />
+              <div key={index} className="flex items-center gap-3" onClick={() => navigate(`/users/${following._id}`)}>
+                <img src={`https://dhkptsocial.onrender.com/files/download/${following.avatar}`} alt={following.name} className="rounded-full" style={{ width: '60px', height: '60px' }} />
                 <div className="flex flex-col">
                   <span className="text-white text-[20px]">{following.name}</span>
                   <span className="text-gray-400">{following.fullname}</span>
@@ -77,6 +79,7 @@ const FollowingsModal = ({ isOpen, onClose, followings }) => {
         </div>
       </div>
     </div>
+    )
   );
 };
 

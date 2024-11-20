@@ -4,6 +4,8 @@ import activity_1 from '../../assets/activity_1.png';
 import activity_2 from '../../assets/activity_2.png';
 import bookmark_1 from '../../assets/bookmark_1.png';
 import bookmark_2 from '../../assets/bookmark_2.png';
+import heart from '../../assets/heart.png';
+import comment from '../../assets/comment.png';
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -33,20 +35,23 @@ const UserAccount = () => {
   const [description, setDescription] = useState("");
   const [activeSection, setActiveSection] = useState('posts');
   const [followed, setFollowed] = useState(true);
-  // const [visiblePosts, setVisiblePosts] = useState(12); // Khởi tạo với 12 bài viết
+  const [visiblePosts, setVisiblePosts] = useState(12); // Khởi tạo với 12 bài viết
   const [loading, setLoading] = useState(true); 
   const [loadingFollow, setLoadingFollow] = useState(false); 
-  // const [loadedAll, setLoadedAll] = useState(false); // Trạng thái kiểm tra đã tải hết hay chưa
+  const [loadedAll, setLoadedAll] = useState(false); // Trạng thái kiểm tra đã tải hết hay chưa
   const [followersData, setFollowersData] = useState([]);
   const [followingsData, setFollowingsData] = useState([]);
   const [isChangeAvatarModalOpen, setIsChangeAvatarModalOpen] = useState(false);
   const [previewAvatar, setPreviewAvatar] = useState(null);
   const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
-  const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false);
+  const [isFollowingsModalOpen, setIsFollowingsModalOpen] = useState(false);
   const enqueueSnackbar = useSnackbar();
   const userId = Cookies.get("customerId");
   const params = useParams();
   const navigate = useNavigate();
+
+  const[posts,setPosts] = useState([]);
+  const[bookmarks, setBookmarks] = useState([]);
 
   function fetchUser() {
     setLoading(true);
@@ -67,19 +72,51 @@ const UserAccount = () => {
       setLoading(false);
     }
   }
+  const fetchPost = async (userId) => {
+    let postList = [];
+    const responsePost = await axios.get(`https://dhkptsocial.onrender.com/articles/${userId}`);
+    // console.log(responsePost.data.data)
+    try{
+      let postList = [];
+      for(let i = 0; i < responsePost.data.data.length; i++){
+        // console.log(responsePost.data.data[i]._id);
+        const responseImage = await axios.get(`https://dhkptsocial.onrender.com/files/${responsePost.data.data[i]._id}`);
+        const postItem = {
+          id: responsePost.data.data[i]._id,
+          likes: responsePost.data.data[i].numberOfLike,
+          comments: responsePost.data.data[i].numberOfComment,
+          image: responseImage.data[0]._id,
+          author: responsePost.data.data[i].userID,
+          articleStatus: responsePost.data.data[i].articleStatus,
+          publishDate: responsePost.data.data[i].publishDate,
+          description: responsePost.data.data[i].description
+        }
+        postList.push(postItem);
+      }
+      setPosts(postList);
+    }
+    catch(error){
+      console.log(error);
+    }
+    
+}
+  const handlePost = (post) => {
+    const data = {
+      _id: post.id,
+      numberOfLike: post.likes,
+      numberOfComment: post.comments,
+      userID: post.author,
+      articleStatus: post.articleStatus,
+      publishDate: post.publishDate,
+      description: post.description,
+    }
+    navigate('/article', {state: {data}});
+  }
 
   useEffect(() => {
+    fetchPost(params.id);
     fetchUser();
   }, [params.id]);
-
-  
-
-  // const { followUser } = UserData();
-
-  // const followHandler = () => {
-  //   setFollowed(!followed);
-  //   followUser(user._id, fetchUser);
-  // };
 
   const followHandler = () => {
     setLoadingFollow(true)
@@ -181,28 +218,29 @@ const UserAccount = () => {
             
 
             {/* Stats */}
-            <div className="flex gap-5 text-center lg:text-left">
+            <div className="flex gap-3 text-center lg:text-left">
               <div className="flex flex-row items-center cursor-pointer">
-                <span className="text-white text-xl">{formatNumber(user.posts ? user.posts.length : 0)} bài viết</span>
+                <span className="text-white text-xl">{formatNumber(posts ? posts.length : 0)} bài viết</span>
               </div>
               <div className="flex flex-row items-center cursor-pointer">
-                <span className="text-white text-xl">{formatNumber(followersData)} người theo dõi</span>
+                <span className="text-white text-xl" onClick={() => setIsFollowersModalOpen(true)}>{formatNumber(followersData)} người theo dõi</span>
               </div>
               <div className="flex flex-row items-center cursor-pointer">
-                <span className="text-white text-xl" >Đang theo dõi {formatNumber(followingsData)} người dùng</span>
+                <span className="text-white text-xl" onClick={() => setIsFollowingsModalOpen(true)}>Đang theo dõi {formatNumber(followingsData)} người dùng</span>
               </div>
             </div>
 
             {/* Modals */}
-            {/* <FollowersModal
-              isOpen={isFollowersModalOpen}
-              onClose={() => setIsFollowersModalOpen(false)}
-              followers={user.followersList}
-            />
-             <FollowingsModal
-              isOpen={isFollowingModalOpen}
-              onClose={() => setIsFollowingModalOpen(false)}
-              followings={user.followingsList}/> */}
+            <FollowingsModal
+            isOpen={isFollowingsModalOpen}
+            onClose={() => setIsFollowingsModalOpen(false)}
+            followings={user.followings} // Hàm xử lý thay đổi avatar
+          />
+          <FollowersModal
+            isOpen={isFollowersModalOpen}
+            onClose={() => setIsFollowersModalOpen(false)}
+            followers={user.followers} // Hàm xử lý thay đổi avatar
+          />
 
             {/* User Bio */}
             <div className="text-center lg:text-left" style={{ fontSize: '20px' }}>
@@ -240,12 +278,35 @@ const UserAccount = () => {
               // setLoadedAll(false); // Reset trạng thái đã tải hết
             }}
           >
-            <img src={activeSection === 'bookmarks' ? bookmark_2 : bookmark_1} alt="Bookmark icon" className="w-5 h-5 mr-1" style={{ width: '30px', height: '30px' }} />
-            <div className="text-[20px] font-semibold">ĐÃ LƯU</div>
+            {/* <img src={activeSection === 'bookmarks' ? bookmark_2 : bookmark_1} alt="Bookmark icon" className="w-5 h-5 mr-1" style={{ width: '30px', height: '30px' }} />
+            <div className="text-[20px] font-semibold">ĐÃ LƯU</div> */}
           </div>
         </div>
-        </div>
       </div>
+      {/* Posts Section */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 justify-center">
+          {(activeSection === 'posts' ? posts : bookmarks).slice(0, visiblePosts).map((post, index) => (
+            <div key={index} className="relative w-full group" onClick={() => handlePost(post)}>
+              <div className="w-full h-0 pb-[100%] relative"> {/* Tạo tỷ lệ 1:1 cho hình vuông */}
+                <img src={`https://dhkptsocial.onrender.com/files/download/${post.image}`} alt={`Post ${index}`} className="absolute top-0 left-0 w-full h-full object-cover" />
+              </div>
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="flex flex-row gap-3">
+                  <div className="flex items-center">
+                    <img src={heart} alt="Likes" className="w-5 h-5 mr-1"/>
+                    <span className="text-white font-medium text-base">{formatNumber(post.likes)}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <img src={comment} alt="Comments" className="w-5 h-5 mr-1"/>
+                    <span className="text-white font-medium text-base">{formatNumber(post.comments)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+    </div>
+      
   );
 };
 

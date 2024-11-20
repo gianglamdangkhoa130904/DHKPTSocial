@@ -6,6 +6,7 @@ import { searchUsers,
   userFollowerandFollowingData,
   followandUnfollowUser,
   getNotifications,
+  getMutualFollows,
   loginUser}
   from '../controllers/userControllers.js';
 import { updateUserProfile } from "../controllers/userControllers.js";
@@ -19,6 +20,7 @@ router.get("/followdata/:id", userFollowerandFollowingData);
 router.get('/profile/:id', userProfile);
 router.put('/:id', upload.single('avatar'), updateUserProfile);
 router.get("/all", searchUsers);
+router.get("/mutual-follows", getMutualFollows);
 
 const uploadAvatar = multer();
 /**

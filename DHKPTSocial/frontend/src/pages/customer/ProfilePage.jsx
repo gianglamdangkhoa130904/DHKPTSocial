@@ -15,7 +15,7 @@ import bookmark_2 from '../../assets/bookmark_2.png';
 import heart from '../../assets/heart.png';
 import comment from '../../assets/comment.png';
 import setting from '../../assets/setting.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -24,42 +24,41 @@ import ChangeAvatarModal from '../../components/ChangeAvatarModal';
 import FollowersModal from '../../components/FollowersModal';
 import FollowingsModal from '../../components/FollowingsModal';
 import { Avatar } from '@chakra-ui/react';
+// const posts = [
+//   { image: img1, likes: 474000, comments: 24000 },
+//   { image: img2, likes: 1200000, comments: 45293 },
+//   { image: img3, likes: 567237, comments: 56200 },
+//   { image: img4, likes: 362478, comments: 24888 },
+//   { image: img5, likes: 1340753, comments: 6782 },
+//   { image: img6, likes: 568328, comments: 550 },
+//   { image: img7, likes: 28892, comments: 7535 },
+//   { image: img8, likes: 562883, comments: 16243 },
+//   { image: img1, likes: 474000, comments: 24000 },
+//   { image: img2, likes: 1200000, comments: 45293 },
+//   { image: img3, likes: 567237, comments: 56200 },
+//   { image: img4, likes: 362478, comments: 24888 },
+//   { image: img5, likes: 1340753, comments: 6782 },
+//   { image: img6, likes: 568328, comments: 550 },
+//   { image: img7, likes: 28892, comments: 7535 },
+//   { image: img8, likes: 562883, comments: 16243 },
+//   { image: img1, likes: 474000, comments: 24000 },
+//   { image: img2, likes: 1200000, comments: 45293 },
+//   { image: img3, likes: 567237, comments: 56200 },
+//   { image: img4, likes: 362478, comments: 24888 },
+//   { image: img5, likes: 1340753, comments: 6782 },
+//   { image: img6, likes: 568328, comments: 550 },
+//   { image: img7, likes: 28892, comments: 7535 },
+//   { image: img8, likes: 562883, comments: 16243 },
+// ];
 
-const posts = [
-  { image: img1, likes: 474000, comments: 24000 },
-  { image: img2, likes: 1200000, comments: 45293 },
-  { image: img3, likes: 567237, comments: 56200 },
-  { image: img4, likes: 362478, comments: 24888 },
-  { image: img5, likes: 1340753, comments: 6782 },
-  { image: img6, likes: 568328, comments: 550 },
-  { image: img7, likes: 28892, comments: 7535 },
-  { image: img8, likes: 562883, comments: 16243 },
-  { image: img1, likes: 474000, comments: 24000 },
-  { image: img2, likes: 1200000, comments: 45293 },
-  { image: img3, likes: 567237, comments: 56200 },
-  { image: img4, likes: 362478, comments: 24888 },
-  { image: img5, likes: 1340753, comments: 6782 },
-  { image: img6, likes: 568328, comments: 550 },
-  { image: img7, likes: 28892, comments: 7535 },
-  { image: img8, likes: 562883, comments: 16243 },
-  { image: img1, likes: 474000, comments: 24000 },
-  { image: img2, likes: 1200000, comments: 45293 },
-  { image: img3, likes: 567237, comments: 56200 },
-  { image: img4, likes: 362478, comments: 24888 },
-  { image: img5, likes: 1340753, comments: 6782 },
-  { image: img6, likes: 568328, comments: 550 },
-  { image: img7, likes: 28892, comments: 7535 },
-  { image: img8, likes: 562883, comments: 16243 },
-];
-
-const bookmarks = [
-  { image: img2, likes: 474000, comments: 24000 },
-  { image: img1, likes: 250000, comments: 45293 },
-  { image: img3, likes: 567237, comments: 56200 },
-  { image: img3, likes: 362478, comments: 24888 },
-  { image: img6, likes: 1340753, comments: 6782 },
-  { image: img8, likes: 568328, comments: 3550 },
-];
+// const bookmarks = [
+//   { image: img2, likes: 474000, comments: 24000 },
+//   { image: img1, likes: 250000, comments: 45293 },
+//   { image: img3, likes: 567237, comments: 56200 },
+//   { image: img3, likes: 362478, comments: 24888 },
+//   { image: img6, likes: 1340753, comments: 6782 },
+//   { image: img8, likes: 568328, comments: 3550 },
+// ];
 
 // const user = [
 //   {
@@ -90,6 +89,7 @@ const formatNumber = (num) => {
 };
 
 const ProfilePage = () => {
+  const [user, setUser] = useState('');
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [avatar, setAvatar] = useState("");
@@ -106,6 +106,10 @@ const ProfilePage = () => {
   // const [previewAvatar, setPreviewAvatar] = useState(null);
   const enqueueSnackbar = useSnackbar();
   const userId = Cookies.get("customerId");
+
+  const[posts,setPosts] = useState([]);
+  const[bookmarks, setBookmarks] = useState([]);
+  const navigate = useNavigate();
 
   const handleLoadMorePosts = () => {
     if (!loading && !loadedAll) {
@@ -127,6 +131,7 @@ const ProfilePage = () => {
       });     
       setFollowersData(data.followers.length);
       setFollowingsData(data.followings.length);
+      setUser(data);
     } catch (error) {
       console.log(error);
       console.log("Error fetching user data", error);
@@ -135,7 +140,8 @@ const ProfilePage = () => {
 
   const { id } = useParams();
   useEffect(() => {
-    console.log(id);
+    fetchPost(Cookies.get('customerId'));
+    // console.log(id);
     
       const fetchUserData = async () => {
         if (!userId) return;
@@ -145,7 +151,7 @@ const ProfilePage = () => {
             `https://dhkptsocial.onrender.com/users/${userId}`
           );
           const user = response.data;
-          console.log("User Data:", user);
+          // console.log("User Data:", user);
           setUsername(user.username);
           setDescription(user.description);
           setAvatar(user.avatar);
@@ -194,6 +200,47 @@ const ProfilePage = () => {
       console.error("Error updating avatar", error);
     }
   };
+  const fetchPost = async (userId) => {
+      let postList = [];
+      const responsePost = await axios.get(`https://dhkptsocial.onrender.com/articles/${userId}`);
+      // console.log(responsePost.data.data)
+      try{
+        let postList = [];
+        for(let i = 0; i < responsePost.data.data.length; i++){
+          // console.log(responsePost.data.data[i]._id);
+          const responseImage = await axios.get(`https://dhkptsocial.onrender.com/files/${responsePost.data.data[i]._id}`);
+          const postItem = {
+            id: responsePost.data.data[i]._id,
+            likes: responsePost.data.data[i].numberOfLike,
+            comments: responsePost.data.data[i].numberOfComment,
+            image: responseImage.data[0]._id,
+            author: responsePost.data.data[i].userID,
+            articleStatus: responsePost.data.data[i].articleStatus,
+            publishDate: responsePost.data.data[i].publishDate,
+            description: responsePost.data.data[i].description
+          }
+          postList.push(postItem);
+        }
+        setPosts(postList);
+      }
+      catch(error){
+        console.log(error);
+      }
+      
+  }
+  const handlePost = (post) => {
+    const data = {
+      _id: post.id,
+      numberOfLike: post.likes,
+      numberOfComment: post.comments,
+      userID: post.author,
+      articleStatus: post.articleStatus,
+      publishDate: post.publishDate,
+      description: post.description,
+    }
+    navigate('/article', {state: {data}});
+  }
+
   return (
     <div className="lg:w-5/6 mx-auto p-5 bg-black" >
       {/* Header Section */}
@@ -215,7 +262,7 @@ const ProfilePage = () => {
         <div className="flex flex-col items-center lg:items-start mt-3 lg:flex-grow gap-4 lg:w-2/3">
           <div className="flex flex-col items-center lg:items-start gap-3 mt-3 lg:mt-0">
             <div className="flex flex-col lg:flex-row flex-wrap justify-center lg:justify-start items-center gap-3">
-              <div className="text-white text-lg font-medium flex">{username} Fourth.ig</div>
+              <div className="text-white text-lg font-medium flex">{username}</div>
               <button className="p-2 bg-[#212425] rounded-lg text-base font-medium text-white hover:bg-[#3a3d40]">
                 <Link to={`/edit/${userId}`}>Chỉnh sửa trang cá nhân</Link>
               </button>
@@ -228,18 +275,18 @@ const ProfilePage = () => {
           </div>
 
           {/* Stats */}
-          <div className="flex gap-3 flex-wrap text-center lg:text-left">
+          <div className="flex gap-3 text-center lg:text-left">
             <div className="flex flex-row items-center cursor-pointer">
-              <span className="text-white text-base font-medium">0 bài viết</span>
+              <span className="text-white text-base font-medium">{posts.length} bài viết</span>
             </div>
             <div className="flex flex-row items-center cursor-pointer">
-              <span className="text-white text-base font-medium">
-                {formatNumber(followersData)} 7 người theo dõi
+              <span className="text-white text-base font-medium" onClick={() => setIsFollowersModalOpen(true)}>
+                {formatNumber(followersData)} người theo dõi
               </span>
             </div>
             <div className="flex flex-row items-center cursor-pointer">
-              <span className="text-white text-base font-medium">
-                Đang theo dõi {formatNumber(followingsData)} 8 người dùng
+              <span className="text-white text-base font-medium" onClick={() => setIsFollowingsModalOpen(true)}>
+                Đang theo dõi {formatNumber(followingsData)} người dùng
               </span>
             </div>
           </div>
@@ -251,11 +298,20 @@ const ProfilePage = () => {
             currentAvatar={`data:image/jpeg;base64,${avatar}`} // Pass the current avatar to the modal
             onAvatarChange={handleAvatarChange} // Hàm xử lý thay đổi avatar
           />
-
+          <FollowingsModal
+            isOpen={isFollowingsModalOpen}
+            onClose={() => setIsFollowingsModalOpen(false)}
+            followings={user.followings} // Hàm xử lý thay đổi avatar
+          />
+          <FollowersModal
+            isOpen={isFollowersModalOpen}
+            onClose={() => setIsFollowersModalOpen(false)}
+            followers={user.followers} // Hàm xử lý thay đổi avatar
+          />
           {/* User Bio */}
           <div className="text-center lg:text-left" style={{ fontSize: "20px" }}>
-            <div className="text-white font-medium text-lg">{name} gggg</div>
-            <div className="text-white font-medium text-base">{description} cong danh cong danhcong danhcong danhcong danhcong danhcong danhcong danhcong danhcong danhcong danhcong danhcong danhcong danhcong danh</div>
+            <div className="text-white font-medium text-lg">{name}</div>
+            <div className="text-white font-medium text-base">{description}</div>
           </div>
         </div>
       </div>
@@ -285,17 +341,17 @@ const ProfilePage = () => {
               setLoadedAll(false); // Reset trạng thái đã tải hết
             }}
           >
-            <img src={activeSection === 'bookmarks' ? bookmark_2 : bookmark_1} alt="Bookmark icon" className="w-5 h-w-5"/>
-            <div className="text-base font-medium">ĐÃ LƯU</div>
+            {/* <img src={activeSection === 'bookmarks' ? bookmark_2 : bookmark_1} alt="Bookmark icon" className="w-5 h-w-5"/>
+            <div className="text-base font-medium">ĐÃ LƯU</div> */}
           </div>
         </div>
 
         {/* Posts Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 justify-center">
           {(activeSection === 'posts' ? posts : bookmarks).slice(0, visiblePosts).map((post, index) => (
-            <div key={index} className="relative w-full group">
+            <div key={index} className="relative w-full group" onClick={() => handlePost(post)}>
               <div className="w-full h-0 pb-[100%] relative"> {/* Tạo tỷ lệ 1:1 cho hình vuông */}
-                <img src={post.image} alt={`Post ${index}`} className="absolute top-0 left-0 w-full h-full object-cover" />
+                <img src={`https://dhkptsocial.onrender.com/files/download/${post.image}`} alt={`Post ${index}`} className="absolute top-0 left-0 w-full h-full object-cover" />
               </div>
               <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div className="flex flex-row gap-3">
