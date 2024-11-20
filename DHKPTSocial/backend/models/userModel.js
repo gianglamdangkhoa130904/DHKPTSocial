@@ -37,11 +37,16 @@ const userSchema = mongoose.Schema(
             },
           ],
         followings: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-        },
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+            },
         ],
+        status: {
+            type: String,
+            enum: ["active", "banned"], 
+            default: "active",
+          },
     }
 );
 export const User = mongoose.model('User', userSchema);
