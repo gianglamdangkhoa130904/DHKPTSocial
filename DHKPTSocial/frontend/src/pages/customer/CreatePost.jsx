@@ -150,9 +150,9 @@ const CreatePost = () => {
                 bg-black rounded-lg text-white p-2 mb-4'>Thêm hình ảnh và video</button>
               )}
               <input className='hidden' type="file" onChange={handleFileChange} ref={imgRef} multiple accept="image/*,video/*"/>
-              <p className='font-bold'>Description:</p>
+              <p className='font-bold'>Mô tả bài viết:</p>
               <div className='p-2 border-2 rounded-lg shadow-lg'>
-                <textarea maxLength={200} type='text' onChange={handleDescription} className=' h-24 w-full resize-none focus:outline-none' value={descriptionPost}></textarea>
+                <textarea placeholder='Nhập mô tả...' maxLength={200} type='text' onChange={handleDescription} className=' h-24 w-full resize-none focus:outline-none' value={descriptionPost}></textarea>
               </div>
               {listMedia.length != 0 ? (
                 !loading ? (

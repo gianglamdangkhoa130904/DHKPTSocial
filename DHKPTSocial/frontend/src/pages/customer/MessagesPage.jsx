@@ -251,9 +251,6 @@ function MessagesPage() {
                                     <h3 className="text-lg font-bold">
                                         {selectedContact?.name || "User"}
                                     </h3>
-                                    <p className="text-sm text-gray-400">
-                                        Active 2h ago
-                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -306,13 +303,13 @@ function MessagesPage() {
                                     if (e.key === "Enter") sendMessage();
                                 }}
                                 className="flex-1 p-2 bg-gray-800 rounded text-white"
-                                placeholder="Type a message..."
+                                placeholder="Nhập tin nhắn..."
                             />
                             <button
                                 onClick={sendMessage}
                                 className="ml-2 p-2 bg-blue-600 rounded text-white"
                             >
-                                Send
+                                Gửi
                             </button>
                         </div>
                     </>

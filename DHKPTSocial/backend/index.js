@@ -11,6 +11,7 @@ import fileRoute from "./routes/fileRoutes.js";
 import reportRoute from "./routes/reportRoute.js";
 import messageRoute from "./routes/messageRoute.js";
 import searchRoute from "./routes/searchRoute.js";
+import adminRoute from "./routes/adminRoute.js";
 import cors from "cors";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
@@ -72,6 +73,7 @@ app.use("/files", fileRoute);
 app.use("/reports", reportRoute);
 app.use("/messages", messageRoute);
 app.use("/search", searchRoute);
+app.use("/admin", adminRoute);
 
 // **Socket.IO Logic**
 io.on("connection", (socket) => {

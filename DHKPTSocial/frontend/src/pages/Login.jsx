@@ -41,6 +41,9 @@ const Login = () => {
               enqueueSnackbar('Sai mật khẩu', { variant: 'error' });
               setLoading(false);
             }
+            else if (response.data.status ==='Banned'){
+              enqueueSnackbar('Tài khoản của bạn đã bị khóa', {variant: 'error'}) ;
+            }
             else{
               // enqueueSnackbar('Đăng nhập thành công', { variant: 'success' });
               Cookies.set('customerId', response.data._id, { expires: 1 });

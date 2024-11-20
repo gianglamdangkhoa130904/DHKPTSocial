@@ -438,12 +438,12 @@ function CardPost(props) {
             <Text alignSelf="start" textColor="white" fontWeight="bold" ml="2">Bài đăng</Text>
             <Input value={postID} disabled bg="white"/>
             <Text alignSelf="start" textColor="white" fontWeight="bold" ml="2">Báo cáo chi tiết</Text>
-            <Textarea placeholder='Write something'bg="white" resize="none" border="none" h="150px"
+            <Textarea placeholder='Nhập nội dung báo cáo...'bg="white" resize="none" border="none" h="150px"
             className='drop-shadow-xl' onChange={(e) => setReportDetails(e.target.value)}/>
           </VStack>
         </ModalBody>
         <ModalFooter display='flex'  className='bg-gradient-to-r from-purple-600 to-pink-600 rounded-b-2xl' justifyContent="center">
-          <Button _hover={{backgroundColor: "black", textColor: "white"}} onClick={handleReport}>Save report</Button>
+          <Button _hover={{backgroundColor: "black", textColor: "white"}} onClick={handleReport}>Lưu báo cáo</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
@@ -464,12 +464,12 @@ function CardPost(props) {
             <Text alignSelf="start" textColor="white" fontWeight="bold" ml="2">Bình luận</Text>
             <Input value={reportCommentID} disabled bg="white"/>
             <Text alignSelf="start" textColor="white" fontWeight="bold" ml="2">Báo cáo chi tiết</Text>
-            <Textarea placeholder='Write something'bg="white" resize="none" border="none" h="150px"
+            <Textarea placeholder='Nhập nội dung báo cáo...'bg="white" resize="none" border="none" h="150px"
             className='drop-shadow-xl' onChange={(e) => setReportDetails(e.target.value)}/>
           </VStack>
         </ModalBody>
         <ModalFooter display='flex'  className='bg-gradient-to-r from-purple-600 to-pink-600 rounded-b-2xl' justifyContent="center">
-          <Button _hover={{backgroundColor: "black", textColor: "white"}} onClick={handleReportComment}>Save report</Button>
+          <Button _hover={{backgroundColor: "black", textColor: "white"}} onClick={handleReportComment}>Lưu báo cáo</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
@@ -701,7 +701,7 @@ function CardPost(props) {
                 </p>
               </div>
               <Link to="#" onClick={onOpen} className="text-gray-500 md:text-sm text-xs">
-                View all {post.numberOfComment} bình luận
+                Xem tất cả {post.numberOfComment} bình luận
               </Link>
             </div>
 
@@ -734,47 +734,6 @@ function CardPost(props) {
           </div>
         )}
       </div>
-      
-      
-
-      {/* <div className='w-1/2 h-auto bg-white m-auto '>
-        <div className='w-full h-auto bg-blue-400 flex'>
-        <div className='m-2 h-10 w-10'>
-            <img src="https://i.ytimg.com/vi/skluj-DE5xI/maxresdefault.jpg" alt="" className='w-full h-full rounded-full'/>
-        </div>
-        <div className='flex items-center ml-4'>
-            <p>{author}</p>
-        </div>
-        </div>
-        <div className='w-full h-80 bg-black' style={{overflow: 'hidden'}}>
-        <div className='flex w-full h-auto items-center transition duration-500 ease-in-out' id='scroll-view'>
-            {files.map((file) => (
-                file.filename.includes(".mp4") ? (
-                    <video className='w-full' autoPlay key={file._id} muted>
-                        <source src={`https://dhkptsocial.onrender.com/files/download/${file._id}`} type="video/mp4" />
-                    </video>
-                ) : (
-                    <img className='w-full' src={`https://dhkptsocial.onrender.com/files/download/${file._id}` } key={file._id}/>
-                )
-            ))}
-            
-        </div>
-        <div className='flex justify-center w-full'>
-            <div className='rounded-full bg-red-400 p-2 mr-4'>Qua phải</div> 
-            <div className='rounded-full bg-blue-400 p-2'>Qua trái</div>
-        </div>
-        </div >
-        <div className='w-full h-auto flex items-center mt-2'>
-        <img src={imageSrc} width={30} height={30} onClick={handleImage} className='mr-2 ml-2'/>
-        <img src={Comment} width={30} height={30}/>
-        </div>
-        <div className='w-full h-auto flex items-center'>
-        <p className='w-full h-auto block p-2'>uilarsgfuiogpfirqefgepgpqieqegpqergpeguiqpuiàafsfasfgpquyofouyfofr</p>
-        </div>
-        <div className='w-full h-auto flex items-center'>
-        <input type="text" className='w-full border-none focus:ring-0 ' placeholder='Add your comment...'/>
-        </div>
-    </div> */}
     </>
   )
 }

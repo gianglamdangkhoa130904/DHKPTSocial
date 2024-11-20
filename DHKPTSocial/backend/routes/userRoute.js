@@ -413,19 +413,8 @@ router.get('/:id', async (request, response) => {
  *                   type: String
  *                   example: "././avatar.png"
  */
-router.put('/:id', async (request, response) => {
+router.put('/edit/:id', async (request, response) => {
   try {
-    if (
-        !request.body.username ||
-        !request.body.password ||
-        !request.body.dob ||
-        !request.body.name
-    ) {
-      return response.status(400).send({
-        message: 'Send all required fields: username, password, age, name',
-      });
-    }
-
     const { id } = request.params;
 
     const result = await User.findByIdAndUpdate(id, request.body);

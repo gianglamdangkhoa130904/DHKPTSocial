@@ -253,7 +253,6 @@ const ProfilePage = () => {
               className="w-full h-full rounded-full object-cover cursor-pointer"
               src={`https://dhkptsocial.onrender.com/files/download/${avatar}`}
               alt="profile"
-              onClick={() => setIsChangeAvatarModalOpen(true)}
             />
           </div>
         </div>
@@ -292,12 +291,12 @@ const ProfilePage = () => {
           </div>
 
           {/* Modals */}
-          <ChangeAvatarModal
+          {/* <ChangeAvatarModal
             isOpen={isChangeAvatarModalOpen}
             onClose={() => setIsChangeAvatarModalOpen(false)}
             currentAvatar={`data:image/jpeg;base64,${avatar}`} // Pass the current avatar to the modal
             onAvatarChange={handleAvatarChange} // Hàm xử lý thay đổi avatar
-          />
+          /> */}
           <FollowingsModal
             isOpen={isFollowingsModalOpen}
             onClose={() => setIsFollowingsModalOpen(false)}

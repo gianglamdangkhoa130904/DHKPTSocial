@@ -11,6 +11,10 @@ import Login from './pages/Login'
 import EditProfilePage from'./pages/customer/EditProfilePage';
 import UserProfilePage from'./pages/customer/UserProfilePage';
 import PostDetails from './pages/customer/PostDetails'
+import AdminLoginPage from './pages/admin/adminLoginPage'
+import AdminPage from './pages/admin/AdminPage'
+import CommentsReports from './pages/admin/CommentsReports'
+import PostsReports from './pages/admin/PostsReports'
 
 const App = () => {
   return (
@@ -23,6 +27,11 @@ const App = () => {
         <Route path='/edit/:id' element={<EditProfilePage/>}/>
         <Route path='/users/:id' element={<UserProfilePage/>}/>
         <Route path='/article' element={<PostDetails/>}/>
+
+        <Route path='/admin/login' element={<AdminLoginPage/>}/>
+        <Route path='/admin' element={<AdminPage/>} />
+        <Route path='comments/reports' element={<CommentsReports/>}/>
+        <Route path='/posts/reports' element={<PostsReports/>}/>
       </Routes>
   )
 }
