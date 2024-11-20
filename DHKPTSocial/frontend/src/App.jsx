@@ -11,7 +11,7 @@ import Login from './pages/Login'
 import EditProfilePage from'./pages/customer/EditProfilePage';
 import UserProfilePage from'./pages/customer/UserProfilePage';
 import PostDetails from './pages/customer/PostDetails'
-import AdminLoginPage from './pages/admin/adminLoginPage'
+import AdminLoginPage from './pages/admin/AdminLoginPage'
 import AdminPage from './pages/admin/AdminPage'
 import CommentsReports from './pages/admin/CommentsReports'
 import PostsReports from './pages/admin/PostsReports'
