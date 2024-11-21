@@ -41,6 +41,7 @@ const UserAccount = () => {
   const [loadedAll, setLoadedAll] = useState(false); // Trạng thái kiểm tra đã tải hết hay chưa
   const [followersData, setFollowersData] = useState([]);
   const [followingsData, setFollowingsData] = useState([]);
+  const [isChangeAvatarModalOpen, setIsChangeAvatarModalOpen] = useState(false);
   const [previewAvatar, setPreviewAvatar] = useState(null);
   const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
   const [isFollowingsModalOpen, setIsFollowingsModalOpen] = useState(false);
