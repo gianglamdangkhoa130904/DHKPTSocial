@@ -19,19 +19,32 @@ import PostsReports from './pages/admin/PostsReports'
 const App = () => {
   return (
       <Routes>
+        {/* Social Media */}
+        <Route path='/login' element={<Login/>}/>
+        <Route path='/register' element={<Register/>}/>
+        {/* User */}
         <Route path='/' element={<Login/>}/>
         <Route path='/home' element={<Home/>}/>
-        <Route path='/login' element={<Login/>}/>
         <Route path='/users/list' element={<ListUser/>}/>
-        <Route path='/register' element={<Register/>}/>
         <Route path='/edit/:id' element={<EditProfilePage/>}/>
         <Route path='/users/:id' element={<UserProfilePage/>}/>
         <Route path='/article' element={<PostDetails/>}/>
-
+        {/* Admin */}
         <Route path='/admin/login' element={<AdminLoginPage/>}/>
         <Route path='/admin' element={<AdminPage/>} />
         <Route path='comments/reports' element={<CommentsReports/>}/>
         <Route path='/posts/reports' element={<PostsReports/>}/>
+
+        {/* E-Commerce */}
+
+        {/* Customer */}
+
+        {/* Seller */}
+
+        {/* Shipper */}
+
+        {/* Admin */}
+
       </Routes>
   )
 }
