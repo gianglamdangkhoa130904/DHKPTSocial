@@ -8,11 +8,10 @@ router.get("/", async (req, res) => {
     try {
         const categories = await Category.find({ status: "Active" });
 
-        const baseUrl = "http://localhost:1324/files/download/";
 
         const categoriesWithImageUrls = categories.map((category) => ({
             ...category._doc,
-            image: baseUrl + category.image, // Thêm đường dẫn ảnh đầy đủ
+            image: category.image, // Thêm đường dẫn ảnh đầy đủ
         }));
 
         res.status(200).json(categoriesWithImageUrls);
