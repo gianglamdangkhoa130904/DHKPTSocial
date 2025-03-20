@@ -113,7 +113,7 @@ const Register = () => {
       const formDataAvatar = new FormData();
       formDataAvatar.append('avatar', avatar);
       setLoading(true);
-      axios.post('https://dhkptsocial.onrender.com/files/upload/avatar', formDataAvatar, {
+      axios.post('http://localhost:1324/files/upload/avatar', formDataAvatar, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
@@ -129,7 +129,7 @@ const Register = () => {
           email: email,
           avatar: response.data.file._id
         }
-        axios.post('https://dhkptsocial.onrender.com/users', data)
+        axios.post('http://localhost:1324/users', data)
         .then((response) => {
           console.log(response.data)
           setLoading(false);

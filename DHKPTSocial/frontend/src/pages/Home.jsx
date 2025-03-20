@@ -9,7 +9,7 @@ import SettingPage from './customer/SettingPage';
 import CreatePost from './customer/CreatePost';
 import Cookies from 'js-cookie';
 import LogoSvg from '../components/svgs/DHKPTSocial';
-import { FaHome, FaSearch, FaFacebookMessenger, FaUserCircle, FaBell  } from "react-icons/fa";
+import { FaHome, FaSearch, FaFacebookMessenger, FaUserCircle, FaBell, FaShoppingBag  } from "react-icons/fa";
 import { IoIosAddCircle,IoIosSettings  } from "react-icons/io";
 import { useSnackbar } from 'notistack';
 
@@ -36,7 +36,7 @@ const Home = () => {
     const name = Cookies.get('customerName');
     if (id === undefined && name === undefined) {
       navigate('/login');
-      enqueueSnackbar('Hãy đăng nhập', { variant: 'error' });
+      enqueueSnackbar('Vui lòng đăng nhập', { variant: 'error' });
     }
   }, [navigate, enqueueSnackbar]);
 
@@ -47,6 +47,7 @@ const Home = () => {
     { id: 'notification', label: 'Thông báo', icon: FaBell },
     { id: 'profile', label: 'Trang cá nhân', icon: FaUserCircle },
     { id: 'create', label: 'Tạo bài viết', icon: IoIosAddCircle },
+    { id: 'e-commerce', label: 'Mua hàng', icon: FaShoppingBag },
   ];
   return (
     <div>
@@ -60,9 +61,10 @@ const Home = () => {
             
             <nav className="space-y-2">
               {menuItems.map((item) => (
-                <button
+                item.label === "Mua hàng"? (
+                  <button
                   key={item.id}
-                  onClick={() => item.id === 'create' ? handleCreate() : handleTabChange(item.id)}
+                  onClick={() => navigate('/e-commerce/customer/home')}
                   className={`
                     w-full px-4 py-3 flex items-center space-x-3 rounded-lg
                     transition-all duration-200 ease-in-out
@@ -75,6 +77,24 @@ const Home = () => {
                   <item.icon className={`text-xl ${activeTab === item.id ? 'text-pink-300' : 'text-gray-400'}`} />
                   <span className="font-medium">{item.label}</span>
                 </button>
+                ):(
+                  <button
+                  key={item.id}
+                  onClick={() => item.id === 'create' ? handleCreate() : handleTabChange(item.id)}
+                  className={`
+                    w-full px-4 py-3 flex items-center space-x-3 rounded-lg
+                    transition-all duration-200 ease-in-out
+                    ${activeTab === item.id ? 
+                      'bg-gradient-to-r from-purple-500/30 to-pink-500/30 text-white shadow-lg shadow-pink-500/20' : 
+                      'text-gray-300 hover:bg-white/10'
+                    }
+                  `}
+                >
+                  
+                  <item.icon className={`text-xl ${activeTab === item.id ? 'text-pink-300' : 'text-gray-400'}`} />
+                  <span className="font-medium">{item.label}</span>
+                </button>
+                )
               ))}
             </nav>
           </div>

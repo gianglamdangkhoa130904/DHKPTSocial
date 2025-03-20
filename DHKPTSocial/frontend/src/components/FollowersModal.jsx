@@ -68,7 +68,7 @@ const FollowersModal = ({ isOpen, onClose, followers }) => {
           ) : (
             filteredFollowers.map((follower, index) => (
               <div key={index} className="flex items-center gap-3" onClick={() => navigate(`/users/${follower._id}`)}>
-                <img src={`https://dhkptsocial.onrender.com/files/download/${follower.avatar}`} alt={follower.name} className="rounded-full" style={{ width: '60px', height: '60px' }} />
+                <img src={`http://localhost:1324/files/download/${follower.avatar}`} alt={follower.name} className="rounded-full" style={{ width: '60px', height: '60px' }} />
                 <div className="flex flex-col">
                   <span className="text-white text-[20px]">{follower.name}</span>
                   <span className="text-gray-400">{follower.fullname}</span>

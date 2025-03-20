@@ -1,24 +1,45 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 const OrderSchema = new mongoose.Schema({
-    userId: {
+    customer: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        require: true,
+        required: true,
     },
-    shipperId: {
+    shipper: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        require: true,
+        required: false,
     },
     totalPrice: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        require: true,
+        type: Number,
+        required: true,
+    },
+    description:{
+        type: String,
+        required: true
+    },
+    note:{
+        type: String,
+        required: false
+    },
+    address:{
+        type: String,
+        required: true
     },
     status: {
         type: String,
-        enum: ["pending", "paid", "shipping", "shipped", "cancelled"],
+        enum: ["pending", "shipping", "shipped", "cancelled"],
+        default: "pending",
+    },
+    paymentMethod:{
+        type: String,
+        enum: ["COD", "VNPay"],
+        default: "COD"
+    },
+    paymentStatus:{
+        type: String,
+        enum: ["pending", "paid"],
         default: "pending",
     },
     items: [
@@ -26,12 +47,38 @@ const OrderSchema = new mongoose.Schema({
             productId: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "Product",
-                require: true,
+                required: true,
             },
+            name: String,
+            image: String,
             quantity: { type: Number, require: true },
+            unitPrice:{
+                type: Number,
+                required: true,
+            },
+            store:{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Store",
+                required: true,
+            },
+            attributes:[
+                {
+                    name: String, 
+                    values: 
+                    {
+                        attributeName: String,
+                        attributeImage: String,
+                        priceAttribute: Number,
+                    }, 
+                }
+            ]
         },
     ],
-    totalPrice: { type: Number, require: true },
+    createAt:{
+        type: Date,
+        default: Date.now
+    }
+    
 });
 
 export const Order = mongoose.model("Order", OrderSchema);

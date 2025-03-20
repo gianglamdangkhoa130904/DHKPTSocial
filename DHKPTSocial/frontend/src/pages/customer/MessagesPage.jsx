@@ -32,7 +32,7 @@ function MessagesPage() {
     // Kết nối với Socket.IO chỉ một lần khi component được mount
     useEffect(() => {
       // Khởi tạo socket với cấu hình tự động kết nối lại
-      socket.current = io("https://dhkptsocial.onrender.com", {
+      socket.current = io("http://localhost:1324", {
           transports: ["websocket"],
           reconnection: true,
           reconnectionAttempts: 10,
@@ -83,7 +83,7 @@ function MessagesPage() {
     useEffect(() => {
         axios
             .get(
-                `https://dhkptsocial.onrender.com/users/mutual-follows?currentUserId=${currentUserId}`
+                `http://localhost:1324/users/mutual-follows?currentUserId=${currentUserId}`
             )
             .then((response) => {
                 setContacts(response.data); // Gán danh sách mutual follows
@@ -107,7 +107,7 @@ function MessagesPage() {
     // Lấy danh sách người dùng và tin nhắn cuối cùng
     useEffect(() => {
         axios
-            .get("https://dhkptsocial.onrender.com/users")
+            .get("http://localhost:1324/users")
             .then((response) => {
                 const userList = response.data.data.filter(
                     (user) => user._id !== currentUserId
@@ -118,7 +118,7 @@ function MessagesPage() {
                     const contactId = contact._id;
                     axios
                         .get(
-                            `https://dhkptsocial.onrender.com/messages/lastMessage/${currentUserId}/${contactId}`
+                            `http://localhost:1324/messages/lastMessage/${currentUserId}/${contactId}`
                         )
                         .then((res) => {
                             setLastMessages((prev) => ({
@@ -144,8 +144,8 @@ function MessagesPage() {
 
         // Fetch tin nhắn ban đầu từ API
         Promise.all([
-            axios.get(`https://dhkptsocial.onrender.com/messages/${currentUserId}/${receiverId}`),
-            axios.get(`https://dhkptsocial.onrender.com/messages/${receiverId}/${currentUserId}`),
+            axios.get(`http://localhost:1324/messages/${currentUserId}/${receiverId}`),
+            axios.get(`http://localhost:1324/messages/${receiverId}/${currentUserId}`),
         ])
             .then(([res1, res2]) => {
                 const combinedMessages = [...res1.data, ...res2.data];
@@ -190,7 +190,7 @@ function MessagesPage() {
   
       // Gửi tin nhắn qua API
       axios
-          .post("https://dhkptsocial.onrender.com/messages", messageData)
+          .post("http://localhost:1324/messages", messageData)
           .then(() => {
               // Emit sự kiện qua Socket.IO, không cần thêm vào state
               socket.current.emit("sendMessage", messageData);
@@ -217,7 +217,7 @@ function MessagesPage() {
                         }`}
                     >
                         <Avatar
-                            src={`https://dhkptsocial.onrender.com/files/download/${contact.avatar}`}
+                            src={`http://localhost:1324/files/download/${contact.avatar}`}
                             alt="Avatar"
                             className="w-12 h-12 rounded-full mr-3"
                         />
@@ -242,7 +242,7 @@ function MessagesPage() {
                             <div className="flex items-center">
                                 <Avatar
                                     src={
-                                        `https://dhkptsocial.onrender.com/files/download/${selectedContact?.avatar}`
+                                        `http://localhost:1324/files/download/${selectedContact?.avatar}`
                                     }
                                     alt="Avatar"
                                     className="w-10 h-10 rounded-full mr-3"

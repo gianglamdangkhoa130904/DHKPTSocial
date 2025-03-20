@@ -10,17 +10,17 @@ const productSchema = mongoose.Schema(
             type: String,
             required: false
         },
-        category:{
-            type: [mongoose.Schema.Types.ObjectId],
+        category:[{
+            type: mongoose.Schema.Types.ObjectId,
             ref: "Category",
             required: true
-        },
+        }],
         soldQuantity:{
             type: Number,
             required: true,
             default: 0,
         },
-        stockQuatity:{
+        totalStockQuantity:{
             type: Number,
             required: true,
             default: 20,
@@ -32,6 +32,10 @@ const productSchema = mongoose.Schema(
         salePrice: {
             type: Number,
             required: false
+        },
+        isSale:{
+            type:Boolean,
+            required: true
         },
         publishDate:{
             type: Date,
@@ -85,10 +89,16 @@ const productSchema = mongoose.Schema(
         attributes: [
             {
               name: String, 
-              values: [String], 
+              values: [
+                {
+                    attributeName: String,
+                    stockQuantity: Number,
+                    attributeImage: String,
+                    priceAttribute: Number
+                }
+              ], 
             },
-          ],
-        
+        ],
     }
 );
 export const Product = mongoose.model('Product', productSchema);

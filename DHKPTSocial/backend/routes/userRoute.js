@@ -423,7 +423,7 @@ router.put('/edit/:id', async (request, response) => {
       return response.status(404).json({ message: 'User not found' });
     }
 
-    return response.status(200).send({ message: 'User updated successfully' });
+    return response.status(200).send({ message: 'User updated successfully', data: result});
   } catch (error) {
     console.log(error.message);
     response.status(500).send({ message: error.message });

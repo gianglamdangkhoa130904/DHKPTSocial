@@ -9,6 +9,7 @@ const SettingPage = () => {
     try{
       Cookies.remove('customerId');
       Cookies.remove('customerName');
+      Cookies.remove('store');
       navigate('/login');
       enqueueSnackbar('Đăng xuất thành công', { variant: 'success' });
     }

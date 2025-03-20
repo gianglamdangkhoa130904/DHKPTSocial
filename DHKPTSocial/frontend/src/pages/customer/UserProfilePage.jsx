@@ -56,7 +56,7 @@ const UserAccount = () => {
   function fetchUser() {
     setLoading(true);
     try {
-      axios.get(`https://dhkptsocial.onrender.com/users/${params.id}`)
+      axios.get(`http://localhost:1324/users/${params.id}`)
       .then((response) => {
         setUser(response.data);
         setUsername(response.data.username);
@@ -74,13 +74,13 @@ const UserAccount = () => {
   }
   const fetchPost = async (userId) => {
     let postList = [];
-    const responsePost = await axios.get(`https://dhkptsocial.onrender.com/articles/${userId}`);
+    const responsePost = await axios.get(`http://localhost:1324/articles/${userId}`);
     // console.log(responsePost.data.data)
     try{
       let postList = [];
       for(let i = 0; i < responsePost.data.data.length; i++){
         // console.log(responsePost.data.data[i]._id);
-        const responseImage = await axios.get(`https://dhkptsocial.onrender.com/files/${responsePost.data.data[i]._id}`);
+        const responseImage = await axios.get(`http://localhost:1324/files/${responsePost.data.data[i]._id}`);
         const postItem = {
           id: responsePost.data.data[i]._id,
           likes: responsePost.data.data[i].numberOfLike,
@@ -121,7 +121,7 @@ const UserAccount = () => {
   const followHandler = () => {
     setLoadingFollow(true)
     try {
-      axios.post(`https://dhkptsocial.onrender.com/users/follow/${params.id}`, 
+      axios.post(`http://localhost:1324/users/follow/${params.id}`, 
         {loggedInUserId: userId},
         { withCredentials: true } // gửi với token
       )
@@ -131,7 +131,7 @@ const UserAccount = () => {
             user: params.id,
             actor: Cookies.get('customerId')
           };
-          axios.delete('https://dhkptsocial.onrender.com/notifications', { data: notify })
+          axios.delete('http://localhost:1324/notifications', { data: notify })
           .then((response) => {
             setFollowed(!followed);
             fetchUser();
@@ -143,7 +143,7 @@ const UserAccount = () => {
             actor: Cookies.get('customerId'),
             actionDetail: 'đã theo dõi bạn',
           };
-          axios.post('https://dhkptsocial.onrender.com/notifications', notification)
+          axios.post('http://localhost:1324/notifications', notification)
           .then((response) => {
             setFollowed(!followed);
             fetchUser();
@@ -170,7 +170,7 @@ const UserAccount = () => {
 
   async function followData() {
     try {
-      const { data } = await axios.get(`https://dhkptsocial.onrender.com/users/followdata/${params.id}`,
+      const { data } = await axios.get(`http://localhost:1324/users/followdata/${params.id}`,
       {withCredentials: true}
       );
       setFollowersData(user.followers.length);
@@ -191,7 +191,7 @@ const UserAccount = () => {
         {/* Profile Information */}
         <div className="w-full lg:w-1/3 h-auto flex justify-center items-center">
           <div className="flex justify-center items-center">
-          <Avatar size="2xl" className="w-full h-full rounded-full object-cover" src={`https://dhkptsocial.onrender.com/files/download/${avatar}`} alt="profile"/>
+          <Avatar size="2xl" className="w-full h-full rounded-full object-cover" src={`http://localhost:1324/files/download/${avatar}`} alt="profile"/>
           </div>
         </div>
 
@@ -274,7 +274,7 @@ const UserAccount = () => {
           {(activeSection === 'posts' ? posts : bookmarks).slice(0, visiblePosts).map((post, index) => (
             <div key={index} className="relative w-full group" onClick={() => handlePost(post)}>
               <div className="w-full h-0 pb-[100%] relative">
-                <img src={`https://dhkptsocial.onrender.com/files/download/${post.image}`} alt={`Post ${index}`} className="absolute top-0 left-0 w-full h-full object-cover" />
+                <img src={`http://localhost:1324/files/download/${post.image}`} alt={`Post ${index}`} className="absolute top-0 left-0 w-full h-full object-cover" />
               </div>
               <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div className="flex flex-row gap-3">

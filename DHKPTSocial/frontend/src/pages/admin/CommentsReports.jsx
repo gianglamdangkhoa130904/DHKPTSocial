@@ -8,7 +8,7 @@ const CommentReportsPage = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("https://dhkptsocial.onrender.com/admin/comments-reports")
+      .get("http://localhost:1324/admin/comments-reports")
       .then((response) => {
         console.log(response.data);
         setReports(response.data.reports);
@@ -23,7 +23,7 @@ const CommentReportsPage = () => {
   // Cập nhật trạng thái báo cáo
   const updateStatus = (commentID, status) => {
     axios
-      .put(`https://dhkptsocial.onrender.com/admin/comments-reports/${commentID}`, { status })
+      .put(`http://localhost:1324/admin/comments-reports/${commentID}`, { status })
       .then((response) => {
         console.log("Cập nhật thành công:", response.data);
   

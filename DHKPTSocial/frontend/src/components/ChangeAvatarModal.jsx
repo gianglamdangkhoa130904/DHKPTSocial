@@ -20,7 +20,7 @@ const ChangeAvatarModal = ({ isOpen, onClose, currentAvatar, onAvatarChange }) =
         try {
           // Gửi yêu cầu PUT lên server với avatar mới
           const response = await axios.put(
-            `https://dhkptsocial.onrender.com/users/${userId}`,
+            `http://localhost:1324/users/${userId}`,
             formData,
             {
               headers: {
@@ -51,7 +51,7 @@ const ChangeAvatarModal = ({ isOpen, onClose, currentAvatar, onAvatarChange }) =
     try {
       // Gửi yêu cầu PUT để cập nhật ảnh đại diện thành ảnh mặc định
       const response = await axios.put(
-        `https://dhkptsocial.onrender.com/users/${userId}`,
+        `http://localhost:1324/users/${userId}`,
         formData,
         {
           headers: {

@@ -126,7 +126,7 @@ const ProfilePage = () => {
   };
   async function followData() {
     try {
-      const { data } = await axios.get(`https://dhkptsocial.onrender.com/users/${userId}`, {
+      const { data } = await axios.get(`http://localhost:1324/users/${userId}`, {
         withCredentials: true, // hoặc dùng headers nếu cần thêm token
       });     
       setFollowersData(data.followers.length);
@@ -148,7 +148,7 @@ const ProfilePage = () => {
   
         try {
           const response = await axios.get(
-            `https://dhkptsocial.onrender.com/users/${userId}`
+            `http://localhost:1324/users/${userId}`
           );
           const user = response.data;
           // console.log("User Data:", user);
@@ -187,7 +187,7 @@ const ProfilePage = () => {
       formData.append("avatar", newAvatar); 
   
       const response = await axios.put(
-        `https://dhkptsocial.onrender.com/users/${userId}`,
+        `http://localhost:1324/users/${userId}`,
         formData,
         {
           headers: {
@@ -202,13 +202,13 @@ const ProfilePage = () => {
   };
   const fetchPost = async (userId) => {
       let postList = [];
-      const responsePost = await axios.get(`https://dhkptsocial.onrender.com/articles/${userId}`);
+      const responsePost = await axios.get(`http://localhost:1324/articles/${userId}`);
       // console.log(responsePost.data.data)
       try{
         let postList = [];
         for(let i = 0; i < responsePost.data.data.length; i++){
           // console.log(responsePost.data.data[i]._id);
-          const responseImage = await axios.get(`https://dhkptsocial.onrender.com/files/${responsePost.data.data[i]._id}`);
+          const responseImage = await axios.get(`http://localhost:1324/files/${responsePost.data.data[i]._id}`);
           const postItem = {
             id: responsePost.data.data[i]._id,
             likes: responsePost.data.data[i].numberOfLike,
@@ -251,7 +251,7 @@ const ProfilePage = () => {
             <Avatar
               size="2xl"
               className="w-full h-full rounded-full object-cover cursor-pointer"
-              src={`https://dhkptsocial.onrender.com/files/download/${avatar}`}
+              src={`http://localhost:1324/files/download/${avatar}`}
               alt="profile"
             />
           </div>
@@ -350,7 +350,7 @@ const ProfilePage = () => {
           {(activeSection === 'posts' ? posts : bookmarks).slice(0, visiblePosts).map((post, index) => (
             <div key={index} className="relative w-full group" onClick={() => handlePost(post)}>
               <div className="w-full h-0 pb-[100%] relative"> {/* Tạo tỷ lệ 1:1 cho hình vuông */}
-                <img src={`https://dhkptsocial.onrender.com/files/download/${post.image}`} alt={`Post ${index}`} className="absolute top-0 left-0 w-full h-full object-cover" />
+                <img src={`http://localhost:1324/files/download/${post.image}`} alt={`Post ${index}`} className="absolute top-0 left-0 w-full h-full object-cover" />
               </div>
               <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div className="flex flex-row gap-3">

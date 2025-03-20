@@ -68,7 +68,7 @@ const FollowingsModal = ({ isOpen, onClose, followings }) => {
           ) : (
             filteredFollowings.map((following, index) => (
               <div key={index} className="flex items-center gap-3" onClick={() => navigate(`/users/${following._id}`)}>
-                <img src={`https://dhkptsocial.onrender.com/files/download/${following.avatar}`} alt={following.name} className="rounded-full" style={{ width: '60px', height: '60px' }} />
+                <img src={`http://localhost:1324/files/download/${following.avatar}`} alt={following.name} className="rounded-full" style={{ width: '60px', height: '60px' }} />
                 <div className="flex flex-col">
                   <span className="text-white text-[20px]">{following.name}</span>
                   <span className="text-gray-400">{following.fullname}</span>

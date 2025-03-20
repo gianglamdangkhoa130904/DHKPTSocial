@@ -34,12 +34,12 @@ const HomePage = () => {
   const fetchFollow = async (userID) => {
     setLoadingPost(true);
     try{
-      const responseFollow = await axios.get(`https://dhkptsocial.onrender.com/users/${userID}`);
+      const responseFollow = await axios.get(`http://localhost:1324/users/${userID}`);
       // console.log(responseFollow.data.followings);
       const followers = responseFollow.data.followings;
       let postList = [];
       for(let i = 0; i < followers.length; i++){
-        const responseArticle = await axios.get(`https://dhkptsocial.onrender.com/articles/${followers[i]._id}`);
+        const responseArticle = await axios.get(`http://localhost:1324/articles/${followers[i]._id}`);
         for(let i = 0; i < responseArticle.data.count; i++)
         {
           postList.push(responseArticle.data.data[i]);
@@ -56,7 +56,7 @@ const HomePage = () => {
   const findUser = async (e) => {
     try {
       if(e.target.value.length != 0){
-        const { data } = await axios.get(`https://dhkptsocial.onrender.com/users/all?search=${e.target.value}`, { withCredentials: true });
+        const { data } = await axios.get(`http://localhost:1324/users/all?search=${e.target.value}`, { withCredentials: true });
 
         setUserList(data);
       }
@@ -69,7 +69,7 @@ const HomePage = () => {
     }
   }
   const fetchUser = () => {
-    axios.get('https://dhkptsocial.onrender.com/users')
+    axios.get('http://localhost:1324/users')
     .then((response) => {
       setUserList(response.data.data);
     })
@@ -214,7 +214,7 @@ const HomePage = () => {
                               <div key={index} className='flex items-center bg-black text-white py-2 px-2 rounded-md mb-2 
                               hover:cursor-pointer hover:bg-white hover:text-black'
                               onClick={() => navigate(`/users/${user._id}`)}>
-                                <Avatar src={`https://dhkptsocial.onrender.com/files/download/${user.avatar}`}/>
+                                <Avatar src={`http://localhost:1324/files/download/${user.avatar}`}/>
                                 <p className='ml-2'>{user.name}</p>
                               </div>
                             )

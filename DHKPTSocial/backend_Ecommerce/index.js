@@ -4,12 +4,23 @@ import mongoose from "mongoose";
 import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
+import smsRoute from "./routes/smsRoute.js";
+import storeRoute from "./routes/storeRoute.js";
+import productRoute from "./routes/productRoute.js";
+import categoryRoute from "./routes/categoryRoute.js";
+import fileRoute from "./routes/fileRoute.js";
+import orderRoute from "./routes/orderRoute.js";
+import userRoute from "./routes/userRoute.js";
+import adsRoute from "./routes/adsRoute.js";
+import layoutRoute from "./routes/layoutRoute.js";
+import cartRoute from "./routes/cartRoute.js"
+import vnpayController from './vnpayController.js';
 
 const app = express();
 const server = http.createServer(app); // Tạo server HTTP
 const io = new Server(server, {
     cors: {
-        origin: "https://dhkptsocial.netlify.app", // Đảm bảo đúng cổng của frontend
+        origin: "http://localhost:5173", // Đảm bảo đúng cổng của frontend
         credentials: true,
     },
 });
@@ -18,7 +29,7 @@ const io = new Server(server, {
 app.use(express.json());
 app.use(
     cors({
-        origin: "https://dhkptsocial.netlify.app",
+        origin: "http://localhost:5173",
         credentials: true,
     })
 );
@@ -29,6 +40,17 @@ app.get("/", (request, response) => {
     return response.status(200).send("Welcome to DHKPT Shop API");
 });
 
+app.use("/send-sms", smsRoute);
+app.use("/store", storeRoute);
+app.use("/categories", categoryRoute);
+app.use("/cart", cartRoute);
+app.use("/files", fileRoute);
+app.use("/user", userRoute);
+app.use("/product", (req, res, next) => { req.io = io; next();}, productRoute);
+app.use("/order", (req, res, next) => { req.io = io; next();}, orderRoute);
+app.use("/ads", (req, res, next) => { req.io = io; next();}, adsRoute);
+app.use("/layout",  (req, res, next) => { req.io = io; next();}, layoutRoute);
+app.use('/vnpay', vnpayController);
 //app.use("/users", userRoute);
 
 
@@ -48,6 +70,7 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         console.log("Client disconnected:", socket.id);
     });
+
 });
 
 // Kết nối đến MongoDB và khởi động server

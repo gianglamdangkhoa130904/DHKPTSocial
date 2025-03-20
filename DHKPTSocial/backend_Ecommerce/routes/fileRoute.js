@@ -24,7 +24,16 @@ router.post('/upload', upload.single('file'), (req, res) => {
   });
   uploadStream.end(req.file.buffer);
   uploadStream.on('finish', () => {
-    res.status(200).send('File uploaded successfully');
+    const fileInfo = {
+      _id: uploadStream.id,
+      filename: req.file.originalname, 
+      length: req.file.size,       
+      contentType: req.file.mimetype 
+    };
+    res.status(200).json({
+      message: 'File uploaded successfully',
+      file: fileInfo
+    });
   });
 });
 

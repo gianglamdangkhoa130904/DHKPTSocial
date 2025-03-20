@@ -77,7 +77,7 @@ const CreatePost = () => {
               user
             };
             try{
-                const response = await axios.post('https://dhkptsocial.onrender.com/articles', data)
+                const response = await axios.post('http://localhost:1324/articles', data)
                 console.log('Inserted document ID:', response.data._id);
                 for (let i = 0; i < file.length; i++) {
                     if(i == file.length - 1){
@@ -85,7 +85,7 @@ const CreatePost = () => {
                         formData.append('file', file[i]);
                         formData.append('postId', response.data._id); 
                         try {
-                            const response = await axios.post('https://dhkptsocial.onrender.com/files/upload', formData, {
+                            const response = await axios.post('http://localhost:1324/files/upload', formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data',
                             },
@@ -105,7 +105,7 @@ const CreatePost = () => {
                         formData.append('file', file[i]);
                         formData.append('postId', response.data._id); 
                         try {
-                          const response = await axios.post('https://dhkptsocial.onrender.com/files/upload', formData, {
+                          const response = await axios.post('http://localhost:1324/files/upload', formData, {
                             headers: {
                               'Content-Type': 'multipart/form-data',
                             },

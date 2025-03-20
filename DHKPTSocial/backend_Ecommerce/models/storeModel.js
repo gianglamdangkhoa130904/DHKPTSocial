@@ -26,6 +26,10 @@ const storeSchema = mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
         }],
+        manager:[{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        }],
         rating:{
             type: Number,
             required: false,
@@ -41,6 +45,7 @@ const storeSchema = mongoose.Schema(
             enum: ["Active", "banned"], 
             default: "Active",
           },
+        
     }
 );
 export const Store = mongoose.model('Store', storeSchema);

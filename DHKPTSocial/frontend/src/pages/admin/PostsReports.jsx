@@ -11,7 +11,7 @@ const PostsReports = () => {
 
   const fetchFiles = async (postId) => {
     try {
-      const response = await axios.get(`https://dhkptsocial.onrender.com/files/download/${postId}`);
+      const response = await axios.get(`http://localhost:1324/files/download/${postId}`);
       return response.data; // Trả về danh sách file
     } catch (error) {
       console.error("Lỗi khi lấy file:", error);
@@ -21,7 +21,7 @@ const PostsReports = () => {
   // const fetchPost = async () => {
   //   try {
   //     const response = await axios.get(
-  //       `https://dhkptsocial.onrender.com/articles/all/${postID}`
+  //       `http://localhost:1324/articles/all/${postID}`
   //     );
   //     console.log(response.data);
   //     setPost(response.data);
@@ -33,7 +33,7 @@ const PostsReports = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("https://dhkptsocial.onrender.com/admin/posts-reports")
+      .get("http://localhost:1324/admin/posts-reports")
       .then((response) => {
         console.log(response.data);
         setReports(response.data.reports);
@@ -49,7 +49,7 @@ const PostsReports = () => {
 
   const updateArticleStatus = (articleID, status) => {
     axios
-      .put(`https://dhkptsocial.onrender.com/admin/posts-reports/${articleID}`, { status })
+      .put(`http://localhost:1324/admin/posts-reports/${articleID}`, { status })
       .then((response) => {
         setReports(
           reports.map((report) =>

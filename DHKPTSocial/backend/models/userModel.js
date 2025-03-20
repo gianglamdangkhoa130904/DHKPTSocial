@@ -14,6 +14,10 @@ const userSchema = mongoose.Schema(
             type: String,
             required: true
         },
+        phone:{
+            type: String,
+            required: true
+        },
         dob:{
             type: Date,
             required: true
@@ -21,6 +25,10 @@ const userSchema = mongoose.Schema(
         email:{
             type: String,
             required: true
+        },
+        address:{
+            type: String,
+            required: false
         },
         description:{
             type: String,

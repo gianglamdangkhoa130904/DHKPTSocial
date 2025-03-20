@@ -7,7 +7,7 @@ const NotificationsPage = () => {
   const [notifyList, setNotifyList] = useState([]);
   const navigate = useNavigate();
   const fetchNotify = async (userID) => {
-    const response = await axios.get(`https://dhkptsocial.onrender.com/notifications/${userID}`)
+    const response = await axios.get(`http://localhost:1324/notifications/${userID}`)
     if(response)
     { 
       // console.log(response.data);

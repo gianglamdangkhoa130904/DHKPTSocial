@@ -67,7 +67,7 @@ const CardPostAdmin = (props) => {
     const [isHideDescription, setIsHideDescription] = useState(false)
   const fetchVideos = async (postID) => {
     try {
-      const response = await axios.get(`https://dhkptsocial.onrender.com/files/${postID}`);
+      const response = await axios.get(`http://localhost:1324/files/${postID}`);
       setFile(response.data);
       setFileLength(response.data.length);
       // console.log(response.data.length);
@@ -77,7 +77,7 @@ const CardPostAdmin = (props) => {
   };
   const fetchUser = async (userID) => {
     try {
-      const response = await axios.get(`https://dhkptsocial.onrender.com/users/${userID}`);
+      const response = await axios.get(`http://localhost:1324/users/${userID}`);
       setAuthor(response.data.name);
       setAvaAuthor(response.data.avatar)
       setUsername(response.data.username);
@@ -88,7 +88,7 @@ const CardPostAdmin = (props) => {
   };
   const fetchLike = async (user, postID) => {
     try{
-      const response = await axios.get(`https://dhkptsocial.onrender.com/likes/${user}/${postID}`);
+      const response = await axios.get(`http://localhost:1324/likes/${user}/${postID}`);
       
       if(response.data != null){
         // console.log('Người dùng đã like bài post' + postID);
@@ -105,7 +105,7 @@ const CardPostAdmin = (props) => {
     }
   }
   const fetchPost = async () => {
-    const response = await axios.get(`https://dhkptsocial.onrender.com/articles/all/${postID}`);
+    const response = await axios.get(`http://localhost:1324/articles/all/${postID}`);
     setPost(response.data);
   }
   const handleTurnRight = () => {
@@ -141,7 +141,7 @@ const CardPostAdmin = (props) => {
 
   const fetchComment = async (postID) => {
     try{
-      const response = await axios.get(`https://dhkptsocial.onrender.com/comments/${postID}`);
+      const response = await axios.get(`http://localhost:1324/comments/${postID}`);
       // console.log(response.data.data);
       setCommentList(response.data.data);
     }
@@ -190,7 +190,7 @@ const CardPostAdmin = (props) => {
         {/* Header của post */}
         <div className="flex items-center p-4">
           <Avatar
-            src={`https://dhkptsocial.onrender.com/files/download/${ava_author}`}
+            src={`http://localhost:1324/files/download/${ava_author}`}
             alt={author}
             className="w-10 h-10 rounded-full hover:cursor-pointer"
             onClick={() => navigate(`/users/${authorID}`)}
@@ -209,13 +209,13 @@ const CardPostAdmin = (props) => {
                       file.filename.includes(".mp4") ? (
                         <div className='w-[299px] h-[200px]' style={{flex:"none"}}>
                           <video className='object-contain w-full h-full' controls key={file._id} >
-                              <source src={`https://dhkptsocial.onrender.com/files/download/${file._id}`} type="video/mp4" />
+                              <source src={`http://localhost:1324/files/download/${file._id}`} type="video/mp4" />
                           </video>
                         </div>
                           
                       ) : (
                         <div className='w-[299px] h-[200px]' style={{flex:"none"}}>
-                          <img className='object-contain w-full h-full' src={`https://dhkptsocial.onrender.com/files/download/${file._id}` } key={file._id}/>
+                          <img className='object-contain w-full h-full' src={`http://localhost:1324/files/download/${file._id}` } key={file._id}/>
                         </div> 
                       )
                   ))}
