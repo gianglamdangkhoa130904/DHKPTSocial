@@ -29,7 +29,7 @@ const Login = () => {
       const handleLogin = () => {
         setLoading(true);
         axios
-        .get(`http://localhost:1324/users/username/${username}`)
+        .get(`https://dhkptsocial.onrender.com/users/username/${username}`)
         .then((response) => {
             setUser(response.data);
             setLoading(false);
@@ -48,7 +48,7 @@ const Login = () => {
               Cookies.set('customerId', response.data._id, { expires: 1 });
               Cookies.set('customerName', response.data.name, { expires: 1 });
               setLoading(false);
-              axios.get(`http://localhost:1325/store/manager/${response.data._id}`)
+              axios.get(`https://dhkshop.onrender.com/store/manager/${response.data._id}`)
               .then((response) => {
                 console.log(response.data);
                 if(response.data.length === 0) navigate('/e-commerce/customer/home');

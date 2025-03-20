@@ -14,7 +14,7 @@ const ListUser = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get('http://localhost:1324/users')
+      .get('https://dhkptsocial.onrender.com/users')
       .then((response) => {
         setUsers(response.data.data);
         setLoading(false);

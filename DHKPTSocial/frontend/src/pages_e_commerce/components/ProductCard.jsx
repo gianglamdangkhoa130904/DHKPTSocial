@@ -9,7 +9,7 @@ const ProductCard = ({ id, imageId, name, price, salesCount, rating }) => {
   const decimalPart = rating % 1; // Phần thập phân của rating
   const emptyStars = 5 - fullStars - (decimalPart > 0 ? 1 : 0); // Số sao trống
 
-  const imageUrl = imageId ? `http://localhost:1324/files/download/${imageId}` : defaultImage;
+  const imageUrl = imageId ? `https://dhkptsocial.onrender.com/files/download/${imageId}` : defaultImage;
 
   const handleCardClick = () => {
     if (!id) {

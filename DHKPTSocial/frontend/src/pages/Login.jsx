@@ -29,7 +29,7 @@ const Login = () => {
     const handleLogin = () => {
         setLoading(true);
         axios
-        .get(`http://localhost:1324/users/username/${username}`)
+        .get(`https://dhkptsocial.onrender.com/users/username/${username}`)
         .then((response) => {
             setUser(response.data);
             setLoading(false);

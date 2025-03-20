@@ -15,7 +15,7 @@ const AdminPage = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:1324/users")
+      .get("https://dhkptsocial.onrender.com/users")
       .then((response) => {
         setUsers(response.data.data);
         setLoading(false);
@@ -33,7 +33,7 @@ const AdminPage = () => {
   const handleStatusChange = (userId, status) => {
    
     axios
-      .put(`http://localhost:1324/admin/status/${userId}`, { status })
+      .put(`https://dhkptsocial.onrender.com/admin/status/${userId}`, { status })
       .then((response) => {
         
         setUsers(

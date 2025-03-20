@@ -26,7 +26,7 @@ const ReturnPayment = () => {
                 const newStatus = {
                   paymentStatus: "paid"
                 }
-                const response = await axios.put(`http://localhost:1325/order/${item.trim()}`,newStatus)
+                const response = await axios.put(`https://dhkshop.onrender.com/order/${item.trim()}`,newStatus)
                 console.log(response.data);
               })
               enqueueSnackbar('Thanh toán thành công', { variant: 'success' });

@@ -10,7 +10,7 @@ const PopularProducts = () => {
 
   useEffect(() => {
     if (activeCategory) {
-      axios.get(`http://localhost:1325/product/category/${activeCategory}`)
+      axios.get(`https://dhkshop.onrender.com/product/category/${activeCategory}`)
         .then((response) => {
           const sortedProducts = response.data.sort((a, b) => b.soldQuantity - a.soldQuantity);
           setProducts(sortedProducts);

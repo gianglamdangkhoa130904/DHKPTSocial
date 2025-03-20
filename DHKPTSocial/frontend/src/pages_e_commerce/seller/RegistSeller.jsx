@@ -112,7 +112,7 @@ const RegistSeller = () => {
                 enqueueSnackbar('Số điện thoại không hợp lệ', {variant: 'warning'});
             }
             else{
-                const response = await axios.post("http://localhost:1325/send-sms/send-otp", { phone: phoneNumber });
+                const response = await axios.post("https://dhkshop.onrender.com/send-sms/send-otp", { phone: phoneNumber });
                 setRequestId(response.data.requestId);
                 console.log("Mã OTP đã được gửi! " + response.data.requestId);
             }
@@ -125,7 +125,7 @@ const RegistSeller = () => {
       // Xác minh OTP
       const verifyOTP = async () => {
         try {
-            const response = await axios.post("http://localhost:1325/send-sms/verify-otp", {
+            const response = await axios.post("https://dhkshop.onrender.com/send-sms/verify-otp", {
                 requestId,
                 code: otp
             });
@@ -137,7 +137,7 @@ const RegistSeller = () => {
 
       const sendSMS = async () => {
         try {
-            const response = await axios.post("http://localhost:1325/send-sms/send-sms", { phone: phoneNumber, code: generateRandomSixDigit() });
+            const response = await axios.post("https://dhkshop.onrender.com/send-sms/send-sms", { phone: phoneNumber, code: generateRandomSixDigit() });
             console.log(response);
         } catch (error) {
             console.log(error.response.data);
@@ -163,7 +163,7 @@ const RegistSeller = () => {
             }
             else {
                 const phoneRegex = /^(?:\+84|0)(3[2-9]|5[2689]|7[06-9]|8[1-9]|9[0-9])\d{7}$/;
-                axios.get(`http://localhost:1325/store/${shopName}`)
+                axios.get(`https://dhkshop.onrender.com/store/${shopName}`)
                 .then((response) => {
                     enqueueSnackbar('Trùng tên shop', {variant: 'warning'});
                     setLoadingInfor(false);
@@ -207,7 +207,7 @@ const RegistSeller = () => {
                         return;
                     }
                     else{
-                        axios.get(`http://localhost:1325/store/taxCode/${taxCode}`)
+                        axios.get(`https://dhkshop.onrender.com/store/taxCode/${taxCode}`)
                         .then((response) => {
                             enqueueSnackbar('Mã số thuế đã được sử dụng', {variant: 'warning'});
                             setLoadingTax(false);
@@ -216,7 +216,7 @@ const RegistSeller = () => {
                         .catch((error) => {
                             const formData = new FormData();
                             formData.append('avatar', file);
-                            axios.post('http://localhost:1325/files/upload/avatar', formData, {
+                            axios.post('https://dhkshop.onrender.com/files/upload/avatar', formData, {
                                 headers: {
                                     'Content-Type': 'multipart/form-data',
                                 },
@@ -231,10 +231,10 @@ const RegistSeller = () => {
                                         taxCode: taxCode,
                                         manager: [Cookies.get("customerId")],
                                     }
-                                    axios.post('http://localhost:1325/store', store)
+                                    axios.post('https://dhkshop.onrender.com/store', store)
                                     .then((response) => {
                                         setStore(response.data);
-                                        axios.post(`http://localhost:1325/layout/newStore/${response.data._id}`)
+                                        axios.post(`https://dhkshop.onrender.com/layout/newStore/${response.data._id}`)
                                         .then((response) => {
                                             setLoadingTax(false);
                                             setisCompleteTax(true);
@@ -250,10 +250,10 @@ const RegistSeller = () => {
                                         taxCode: taxCode,
                                         manager: [Cookies.get("customerId")],
                                     }
-                                    axios.post('http://localhost:1325/store', store)
+                                    axios.post('https://dhkshop.onrender.com/store', store)
                                     .then((response) => {
                                         setStore(response.data);
-                                        axios.post(`http://localhost:1325/layout/newStore/${response.data._id}`)
+                                        axios.post(`https://dhkshop.onrender.com/layout/newStore/${response.data._id}`)
                                         .then((response) => {
                                             setLoadingTax(false);
                                             setisCompleteTax(true);
@@ -309,7 +309,7 @@ const RegistSeller = () => {
             navigate('/login');
         }
         else{
-            axios.get(`http://localhost:1324/users/${Cookies.get('customerId')}`)
+            axios.get(`https://dhkptsocial.onrender.com/users/${Cookies.get('customerId')}`)
             .then((response) => {
                 setUser(response.data);
                 setEmail(response.data.email);
@@ -642,7 +642,7 @@ const RegistSeller = () => {
                                         <div className="flex justify-center mb-4">
                                             {store?.logo ? (
                                                 <img 
-                                                    src={`http://localhost:1325/files/download/${store.logo}`}
+                                                    src={`https://dhkshop.onrender.com/files/download/${store.logo}`}
                                                     alt="Shop Logo" 
                                                     className="h-24 w-24 rounded-full object-cover border-4 border-white shadow-lg"
                                                 />

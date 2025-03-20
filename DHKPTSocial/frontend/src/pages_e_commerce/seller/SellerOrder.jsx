@@ -4,7 +4,7 @@ import SellerHomeNav from '../components/SellerHomeNav';
 import  Cookie  from 'js-cookie';
 import io from "socket.io-client";
 import axios from 'axios';
-const socket = io("http://localhost:1325");
+const socket = io("https://dhkshop.onrender.com");
 
 const SellerOrder = () => {
   // State management
@@ -59,7 +59,7 @@ const SellerOrder = () => {
       try {
         setLoading(true);
         // Replace with actual API call
-        const response = await fetch(`http://localhost:1325/order/store/${Cookie.get('store')}`);
+        const response = await fetch(`https://dhkshop.onrender.com/order/store/${Cookie.get('store')}`);
         const data = await response.json();
         // console.log(data);
         setOrders(data);
@@ -71,7 +71,7 @@ const SellerOrder = () => {
     };
 
     fetchOrders();
-    axios.get(`http://localhost:1325/store/id/${Cookie.get('store')}`)
+    axios.get(`https://dhkshop.onrender.com/store/id/${Cookie.get('store')}`)
     .then((response) => {
       setStore(response.data);
     })
@@ -135,7 +135,7 @@ const SellerOrder = () => {
     const newStatus = {
       status: "shipping"
     }
-    axios.put(`http://localhost:1325/order/${selectedOrder._id}`,newStatus)
+    axios.put(`https://dhkshop.onrender.com/order/${selectedOrder._id}`,newStatus)
     .then((response) => {
       setShowModal(false);
       setSelectedOrder(null);

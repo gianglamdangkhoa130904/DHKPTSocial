@@ -17,7 +17,7 @@ const SellerHomeNav = () => {
         { title: 'Quản lý thuế', icon: <FaFileInvoiceDollar className="text-xl text-purple-600" />, click: '/e-commerce/seller/tax' },
     ];
     const changeStore = () => {
-        axios.get(`http://localhost:1325/store/manager/${Cookies.get('customerId')}`)
+        axios.get(`https://dhkshop.onrender.com/store/manager/${Cookies.get('customerId')}`)
         .then((response) => {
             navigate('/e-commerce/seller/list-store', { state: { items: response.data } });
         })

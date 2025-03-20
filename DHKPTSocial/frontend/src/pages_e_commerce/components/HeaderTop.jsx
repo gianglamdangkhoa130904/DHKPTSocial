@@ -11,11 +11,11 @@ function HeaderTop() {
 
   useEffect(() => {
     if (userId) {
-      axios.get(`http://localhost:1324/users/${userId}`)
+      axios.get(`https://dhkptsocial.onrender.com/users/${userId}`)
         .then((response) => {
           const avatarId = response.data.avatar; 
           if (avatarId) {
-            setAvatarUrl(`http://localhost:1324/files/download/${avatarId}`);
+            setAvatarUrl(`https://dhkptsocial.onrender.com/files/download/${avatarId}`);
           } else {
             setAvatarUrl("https://cdn.builder.io/api/v1/image/assets/TEMP/default-avatar.png"); 
           }

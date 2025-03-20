@@ -73,7 +73,7 @@ const ProductDetail = () => {
                 return;
             }
             axios.get(
-                `http://localhost:1325/cart/user/${userId}`
+                `https://dhkshop.onrender.com/cart/user/${userId}`
             )
             .then((res) => {
                 console.log("🟢 Đang dùng cartId:", res.data._id);
@@ -93,7 +93,7 @@ const ProductDetail = () => {
     
             console.log("📤 Gửi dữ liệu cartItem:", cartItem);
     
-            axios.post("http://localhost:1325/cart/add", cartItem)
+            axios.post("https://dhkshop.onrender.com/cart/add", cartItem)
             .then((response) => {
                 console.log("📩 Server phản hồi:", response.data);
     
@@ -103,7 +103,7 @@ const ProductDetail = () => {
             })
             .catch((error) => {
                 console.log("🚀 Cart chưa tồn tại, tạo mới...");
-                axios.post("http://localhost:1325/cart/create", { userId })
+                axios.post("https://dhkshop.onrender.com/cart/create", { userId })
             });
         } catch (error) {
             console.error("⛔ Lỗi khi thêm vào giỏ hàng:", error.response?.data || error);
@@ -115,7 +115,7 @@ const ProductDetail = () => {
         if (product?.store?._id) {
             axios
                 .get(
-                    `http://localhost:1325/product/store/${product.store._id}/rating`
+                    `https://dhkshop.onrender.com/product/store/${product.store._id}/rating`
                 )
                 .then((response) => {
                     setStoreData(response.data);
@@ -128,7 +128,7 @@ const ProductDetail = () => {
 
     useEffect(() => {
         axios
-            .get(`http://localhost:1325/product/${id}`)
+            .get(`https://dhkshop.onrender.com/product/${id}`)
             .then((response) => {
                 setProduct(response.data);
                 if (response.data.images && response.data.images.length > 0) {
@@ -168,7 +168,7 @@ const ProductDetail = () => {
                                 {selectedImage && (
                                     <img
                                         src={
-                                            `http://localhost:1324/files/download/${selectedImage}` ||
+                                            `https://dhkptsocial.onrender.com/files/download/${selectedImage}` ||
                                             defaultImage
                                         }
                                         alt="Product main"
@@ -189,7 +189,7 @@ const ProductDetail = () => {
                                             }`}
                                         >
                                             <img
-                                                src={`http://localhost:1324/files/download/${image}`}
+                                                src={`https://dhkptsocial.onrender.com/files/download/${image}`}
                                                 alt={`Thumbnail ${index + 1}`}
                                                 className="object-contain shrink-0 rounded-md max-w-full aspect-[1] w-[65px]"
                                             />
@@ -423,7 +423,7 @@ const ProductDetail = () => {
                                 <div className="flex grow gap-3 text-center">
                                     <img
                                         src={
-                                            `http://localhost:1324/files/download/${store.logo}` ||
+                                            `https://dhkptsocial.onrender.com/files/download/${store.logo}` ||
                                             "https://via.placeholder.com/55"
                                         }
                                         alt="Shop profile"

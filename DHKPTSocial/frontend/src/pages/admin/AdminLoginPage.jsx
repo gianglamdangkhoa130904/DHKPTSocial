@@ -27,7 +27,7 @@ const AdminLoginPage = () => {
     const handleLogin = () => {
       setLoading(true);
       axios
-        .post('http://localhost:1324/admin/login', { username, password }, { withCredentials: true }) 
+        .post('https://dhkptsocial.onrender.com/admin/login', { username, password }, { withCredentials: true }) 
         .then((response) => {
           const { userId, token } = response.data; 
           console.log("User ID:", userId);

@@ -22,7 +22,7 @@ const EditProfilePage = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:1324/users/${userId}`
+          `https://dhkptsocial.onrender.com/users/${userId}`
         );
         console.log(response.data);
         const user = response.data;
@@ -47,7 +47,7 @@ const EditProfilePage = () => {
       //   name: username,
       //   description: description
       // }
-      // axios.put(`http://localhost:1324/users/${Cookies.get("customerId")}`, data)
+      // axios.put(`https://dhkptsocial.onrender.com/users/${Cookies.get("customerId")}`, data)
       // .then((response) => {
       //   enqueueSnackbar('Cập nhật thông tin thành công', { variant: 'success' });
       //   navigate('/home');
@@ -56,7 +56,7 @@ const EditProfilePage = () => {
     else if(avatar != null){
       const formDataAvatar = new FormData();
       formDataAvatar.append('avatar', avatar);
-      axios.post('http://localhost:1324/files/upload/avatar', formDataAvatar, {
+      axios.post('https://dhkptsocial.onrender.com/files/upload/avatar', formDataAvatar, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
@@ -71,7 +71,7 @@ const EditProfilePage = () => {
           description: description,
           avatar: response.data.file._id
         }
-        axios.put(`http://localhost:1324/users/edit/${Cookies.get("customerId")}`, dataUpdate)
+        axios.put(`https://dhkptsocial.onrender.com/users/edit/${Cookies.get("customerId")}`, dataUpdate)
         .then((response) => {
           console.log(response.data);
           enqueueSnackbar('Cập nhật thông tin thành công', { variant: 'success' });

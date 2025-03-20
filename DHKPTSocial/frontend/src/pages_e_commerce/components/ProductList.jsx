@@ -88,7 +88,7 @@ const ProductList = ({listTitle, productList, maxVisible, scrollLength}) => {
                 {/* Product Image */}
                 <div className='relative w-full h-[180px] bg-gray-100 overflow-hidden group'>
                   <img 
-                    src={`http://localhost:1325/files/download/${product.images[0]}`} 
+                    src={`https://dhkshop.onrender.com/files/download/${product.images[0]}`} 
                     alt={product.name} 
                     className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
                   />

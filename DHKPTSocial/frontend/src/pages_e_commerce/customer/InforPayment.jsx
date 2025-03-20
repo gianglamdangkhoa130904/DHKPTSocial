@@ -57,7 +57,7 @@ const InforPayment = () => {
             const user = {
                 address: acceptAddress+", "+ward+", "+district+", "+province
             }
-            axios.put(`http://localhost:1324/users/edit/${Cookie.get('customerId')}`, user)
+            axios.put(`https://dhkptsocial.onrender.com/users/edit/${Cookie.get('customerId')}`, user)
             .then((response) => {
                 setAddress(acceptAddress+", "+ward+", "+district+", "+province);
                 enqueueSnackbar('Lưu địa chỉ thành công', {variant: 'success'});
@@ -72,7 +72,7 @@ const InforPayment = () => {
         }
     }
     useEffect(() => {
-        axios.get(`http://localhost:1324/users/${Cookie.get('customerId')}`)
+        axios.get(`https://dhkptsocial.onrender.com/users/${Cookie.get('customerId')}`)
         .then((response) => {
             setUser(response.data);
             setAddress(response.data.address);
@@ -115,7 +115,7 @@ const InforPayment = () => {
             const user = {
                 phone: phone
             }
-            axios.put(`http://localhost:1324/users/edit/${Cookies.get('customerId')}`, user)
+            axios.put(`https://dhkptsocial.onrender.com/users/edit/${Cookies.get('customerId')}`, user)
             .then((response) => {
             });
         }
@@ -144,7 +144,7 @@ const InforPayment = () => {
                 items: items
             };
 
-            return axios.post("http://localhost:1325/order", order);
+            return axios.post("https://dhkshop.onrender.com/order", order);
         });
 
         try {
@@ -170,7 +170,7 @@ const InforPayment = () => {
             
             if (!cartId[0]) return;
 
-            await axios.delete("http://localhost:1325/cart/remove", {
+            await axios.delete("https://dhkshop.onrender.com/cart/remove", {
                 data: { cartId: cartId[0], itemId },
             });
             window.dispatchEvent(new Event("deleteCart"));

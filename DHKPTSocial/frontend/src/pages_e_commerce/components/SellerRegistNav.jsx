@@ -20,7 +20,7 @@ const SellerRegistNav = () => {
           enqueueSnackbar('Vui lòng đăng nhập', { variant: 'error' });
         }
         else{
-            axios.get(`http://localhost:1324/users/${Cookies.get('customerId')}`)
+            axios.get(`https://dhkptsocial.onrender.com/users/${Cookies.get('customerId')}`)
             .then((response) => {
                 setUsername(response.data.name);
                 setAvatar(response.data.avatar)
@@ -55,7 +55,7 @@ const SellerRegistNav = () => {
             </div>
             <div className='h-full w-auto flex justify-center items-center'>
                 <div className='h-[45px] w-[45px] bg-gray-500 rounded-full border-2 border-gray-200 shadow-md'>
-                    <img src={`http://localhost:1324/files/download/${avatar}`} className='object-cover h-full w-full rounded-full'/>
+                    <img src={`https://dhkptsocial.onrender.com/files/download/${avatar}`} className='object-cover h-full w-full rounded-full'/>
                 </div>
             </div>
         </div>

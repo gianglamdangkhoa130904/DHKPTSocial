@@ -5,7 +5,7 @@ const CategoryTabs = ({ activeCategory, setActiveCategory }) => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:1325/categories")
+    axios.get("https://dhkshop.onrender.com/categories")
       .then((response) => {
         setCategories(response.data);
         if (response.data.length > 0) {

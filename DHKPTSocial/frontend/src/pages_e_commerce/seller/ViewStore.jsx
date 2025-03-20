@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { FaUser, FaPlus, FaStar, FaHeart, FaComment, FaCalendarAlt, FaShoppingBag } from 'react-icons/fa';
 import axios from 'axios'
 import ProductList from '../components/ProductList';
-const socket = io("http://localhost:1325");
+const socket = io("https://dhkshop.onrender.com");
 
 const ViewStore = () => {
     const [products, setProducts] = useState([]);
@@ -22,17 +22,17 @@ const ViewStore = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get(`http://localhost:1325/store/id/${params.id}`)
+        axios.get(`https://dhkshop.onrender.com/store/id/${params.id}`)
         .then((response) => {
             setStore(response.data);
         })
-        axios.get(`http://localhost:1325/product/store/${params.id}`)
+        axios.get(`https://dhkshop.onrender.com/product/store/${params.id}`)
         .then((response) => {
             setProductNumber(response.data.length);
         })
     }, [])
     useEffect(() => {
-        axios.get(`http://localhost:1325/layout/store/${params.id}`)
+        axios.get(`https://dhkshop.onrender.com/layout/store/${params.id}`)
         .then((response) => {
           setLayout(response.data.filter(layout => layout.adsLayout?.adsType !== "vertical"));
           const verticalLayout = response.data.filter(layout => layout.adsLayout?.adsType === "vertical");
@@ -40,7 +40,7 @@ const ViewStore = () => {
 
         })
         // Fetch danh sách sản phẩm ban đầu
-        fetch(`http://localhost:1325/product/store/${params.id}`)
+        fetch(`https://dhkshop.onrender.com/product/store/${params.id}`)
             .then((res) => res.json())
             .then((data) => {
                 setProducts(data)
@@ -168,7 +168,7 @@ const ViewStore = () => {
             <div className='w-1/4 flex flex-col gap-4 p-4 mr-4'>
               {verticalLayout.map((item, index) => (
                 <div key={index} className={`w-full h-[800px]  rounded-lg overflow-hidden shadow-md`}>
-                  <img src={`http://localhost:1325/files/download/${item.adsLayout?.image}`} alt="" className='w-full object-cover h-full'/>
+                  <img src={`https://dhkshop.onrender.com/files/download/${item.adsLayout?.image}`} alt="" className='w-full object-cover h-full'/>
                 </div>
               ))}
             </div>
@@ -193,7 +193,7 @@ const ViewStore = () => {
                 )}
                 {item.layoutType === "ads" && (
                   <div key={index} className={`w-full ${item.adsLayout?.adsType === "standard" ? "h-[400px]": "h-[200px]"}  rounded-lg overflow-hidden shadow-md`}>
-                    <img src={`http://localhost:1325/files/download/${item.adsLayout?.image}`} alt="" className='w-full object-cover'/>
+                    <img src={`https://dhkshop.onrender.com/files/download/${item.adsLayout?.image}`} alt="" className='w-full object-cover'/>
                   </div>
                 )}
               </React.Fragment>

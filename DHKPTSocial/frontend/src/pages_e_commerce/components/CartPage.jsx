@@ -14,7 +14,7 @@ const CartPage = () => {
     const navigate = useNavigate();
     useEffect(() => {
         axios.get(
-            `http://localhost:1325/cart/user/${Cookies.get('customerId')}`
+            `https://dhkshop.onrender.com/cart/user/${Cookies.get('customerId')}`
         )
         .then((response) => {
             fetchCart(response.data);
@@ -35,7 +35,7 @@ const CartPage = () => {
             
             if (!cartId) return;
 
-            await axios.put("http://localhost:1325/cart/update", {
+            await axios.put("https://dhkshop.onrender.com/cart/update", {
                 cartId,
                 itemId,
                 quantity: newQuantity,
@@ -59,7 +59,7 @@ const CartPage = () => {
             
             if (!cartId) return;
 
-            await axios.delete("http://localhost:1325/cart/remove", {
+            await axios.delete("https://dhkshop.onrender.com/cart/remove", {
                 data: { cartId, itemId },
             });
 
@@ -142,7 +142,7 @@ const CartPage = () => {
                                                 onChange={() => handleCheckboxChange(product, index)}
                                             />
                                             <img
-                                                src={`http://localhost:1324/files/download/${product.image}`}
+                                                src={`https://dhkptsocial.onrender.com/files/download/${product.image}`}
                                                 alt={product.name}
                                                 className="w-20 h-20 rounded-md border border-solid border-zinc-300"
                                             />

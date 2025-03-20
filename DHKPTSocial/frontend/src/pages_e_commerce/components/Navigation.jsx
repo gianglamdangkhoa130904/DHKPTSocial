@@ -9,7 +9,7 @@ function Navigation() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:1325/categories");
+        const response = await axios.get("https://dhkshop.onrender.com/categories");
         setCategories(response.data);
       } catch (error) {
         console.error("Lỗi khi lấy danh mục:", error);

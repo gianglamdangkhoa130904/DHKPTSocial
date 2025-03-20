@@ -7,7 +7,7 @@ import { GoTriangleDown } from 'react-icons/go';
 import io from "socket.io-client";
 import { useSnackbar } from 'notistack';
 
-const socket = io("http://localhost:1325");
+const socket = io("https://dhkshop.onrender.com");
 const SellerAds = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [layout, setLayout] = useState([]);
@@ -64,13 +64,13 @@ const SellerAds = () => {
   };
   useEffect(() => {
     const storeID = Cookies.get('store');
-    axios.get(`http://localhost:1325/layout/store/${storeID}`)
+    axios.get(`https://dhkshop.onrender.com/layout/store/${storeID}`)
     .then((response) => {
       setLayout(response.data.filter(layout => layout.adsLayout?.adsType !== "vertical"));
       const verticalLayout = response.data.filter(layout => layout.adsLayout?.adsType === "vertical");
       setVerticalLayout(verticalLayout);
     })
-    axios.get(`http://localhost:1325/product/store/${storeID}`)
+    axios.get(`https://dhkshop.onrender.com/product/store/${storeID}`)
     .then((response) => {
       setProducts(response.data);
     })
@@ -83,14 +83,14 @@ const SellerAds = () => {
       enqueueSnackbar('Vui lòng thêm ảnh quảng cáo', {variant: 'warning'});
     }
     else{
-      axios.get(`http://localhost:1325/layout/name/${name}/${Cookies.get('store')}`)
+      axios.get(`https://dhkshop.onrender.com/layout/name/${name}/${Cookies.get('store')}`)
       .then((response) => {
         enqueueSnackbar('Bố cục đã tồn tại', {variant: 'warning'});
       })
       .catch((error) => {
         const formData = new FormData();
         formData.append('avatar', file);
-        axios.post('http://localhost:1325/files/upload/avatar', formData, {
+        axios.post('https://dhkshop.onrender.com/files/upload/avatar', formData, {
           headers: {
               'Content-Type': 'multipart/form-data',
           },
@@ -101,7 +101,7 @@ const SellerAds = () => {
               adsType:adsType
             }
             if(link !== "") newAds.link = link;
-            axios.post('http://localhost:1325/ads', newAds)
+            axios.post('https://dhkshop.onrender.com/ads', newAds)
             .then((response) => {
               const newLayout = {
                 store: Cookies.get('store'),
@@ -110,7 +110,7 @@ const SellerAds = () => {
                 layoutType: "ads",
                 adsLayout: response.data._id
               }
-              axios.post('http://localhost:1325/layout', newLayout)
+              axios.post('https://dhkshop.onrender.com/layout', newLayout)
               .then((response) => {
                 console.log(response.data);
                 enqueueSnackbar('Thêm bố cục thành công', {variant: 'success'});
@@ -204,7 +204,7 @@ const SellerAds = () => {
                         onClick={() => {setLayoutItem(item); setIsAddAds(false)}}
                       >
                         <img 
-                          src={`http://localhost:1325/files/download/${item.adsLayout?.image}`} 
+                          src={`https://dhkshop.onrender.com/files/download/${item.adsLayout?.image}`} 
                           alt="" 
                           className='rounded-md w-full h-full object-cover'
                         />
@@ -238,7 +238,7 @@ const SellerAds = () => {
                         onClick={() => {setLayoutItem(item); setIsAddAds(false)}}
                       >
                         <img 
-                          src={`http://localhost:1325/files/download/${item.adsLayout?.image}`} 
+                          src={`https://dhkshop.onrender.com/files/download/${item.adsLayout?.image}`} 
                           alt="" 
                           className='rounded-md w-full h-full object-cover'
                         />

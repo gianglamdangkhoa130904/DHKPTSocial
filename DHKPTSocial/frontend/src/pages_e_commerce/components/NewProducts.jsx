@@ -6,7 +6,7 @@ const NewProducts = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:1325/product/new")
+    axios.get("https://dhkshop.onrender.com/product/new")
       .then((response) => {
         const sortedProducts = response.data.sort((a, b) => 
           new Date(b.publishDate) - new Date(a.publishDate)

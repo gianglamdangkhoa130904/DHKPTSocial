@@ -21,7 +21,7 @@ const PaymentPage = () => {
         ? orders.map(order => order._id).join(',')
         : orders._id;
         
-      const res = await axios.post('http://localhost:1325/vnpay/payment', {
+      const res = await axios.post('https://dhkshop.onrender.com/vnpay/payment', {
         amount: totalAmount,
         orderId: orderIds,
         returnURL: window.location.origin
@@ -63,7 +63,7 @@ const PaymentPage = () => {
             <div key={itemIndex} className="flex justify-between border-b py-2">
               <div className="flex">
                 {item.image && (
-                  <img src={`http://localhost:1325/files/download/${item.image}`} alt={item.name} className="w-16 h-16 object-cover mr-2 rounded-md" />
+                  <img src={`https://dhkshop.onrender.com/files/download/${item.image}`} alt={item.name} className="w-16 h-16 object-cover mr-2 rounded-md" />
                 )}
                 <div>
                   <p className="font-medium">{item.name}</p>

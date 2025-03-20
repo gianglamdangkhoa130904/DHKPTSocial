@@ -17,16 +17,16 @@ const SellerHome = () => {
     const storeID = Cookies.get('store');
     if(storeID != undefined){
       setStore(storeID);
-      axios.get(`http://localhost:1325/product/store/${storeID}`)
+      axios.get(`https://dhkshop.onrender.com/product/store/${storeID}`)
       .then((response) => {
         setProduct(response.data.length);
       })
-      axios.get(`http://localhost:1325/store/id/${storeID}`)
+      axios.get(`https://dhkshop.onrender.com/store/id/${storeID}`)
       .then((response) => {
         setStore(response.data);
         console.log(response.data);
       })
-      axios.get(`http://localhost:1325/order/store/${storeID}`)
+      axios.get(`https://dhkshop.onrender.com/order/store/${storeID}`)
       .then((response) => {
         setOrder(response.data.length);
         const shippedOrder = response.data?.filter((item) => item.status === "shipped");
@@ -101,7 +101,7 @@ const SellerHome = () => {
                 <div className="p-1 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg transform hover:scale-105 transition-all duration-300">
                   <div className="w-20 h-20 rounded-full bg-white p-0.5">
                     <img 
-                      src={`http://localhost:1325/files/download/${store.logo}`} 
+                      src={`https://dhkshop.onrender.com/files/download/${store.logo}`} 
                       alt="Logo cửa hàng" 
                       className="w-full h-full rounded-full object-cover"
                     />

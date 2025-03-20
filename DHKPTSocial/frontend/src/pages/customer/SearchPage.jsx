@@ -14,7 +14,7 @@ function SearchPage() {
     useEffect(() => {
         // Lấy danh sách người dùng ngẫu nhiên
         axios
-            .get(`http://localhost:1324/search/random?userId=${currentUserId}`)
+            .get(`https://dhkptsocial.onrender.com/search/random?userId=${currentUserId}`)
             .then((res) => {
                 setSuggestedUsers(res.data.data);
             })
@@ -25,7 +25,7 @@ function SearchPage() {
         // Lấy danh sách "Có thể bạn sẽ biết"
         axios
             .get(
-                `http://localhost:1324/search/may-know?userId=${currentUserId}`
+                `https://dhkptsocial.onrender.com/search/may-know?userId=${currentUserId}`
             )
             .then((res) => {
                 setMayKnowUsers(res.data.data);
@@ -44,7 +44,7 @@ function SearchPage() {
         } else {
             axios
                 .get(
-                    `http://localhost:1324/search/users?query=${term}&userId=${currentUserId}`
+                    `https://dhkptsocial.onrender.com/search/users?query=${term}&userId=${currentUserId}`
                 )
                 .then((res) => {
                     setSearchResults(res.data.data);
@@ -64,7 +64,7 @@ function SearchPage() {
                         <img
                             src={
                                 user.avatar
-                                    ? `http://localhost:1324/files/download/${user.avatar}`
+                                    ? `https://dhkptsocial.onrender.com/files/download/${user.avatar}`
                                     : defaultAvatar
                             }
                             alt="Avatar"
