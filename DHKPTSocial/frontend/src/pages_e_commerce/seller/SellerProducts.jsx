@@ -8,7 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import Cookies from 'js-cookie';
 import io from "socket.io-client";
-
+import ProductUpdater from '../../design_patterns/TemplateMethodPattern/ProductUpdater';
+import ProductUploader from '../../design_patterns/TemplateMethodPattern/ProductUploader';
 
 const socket = io("https://dhkshop.onrender.com");
 const SellerProducts = () => {
@@ -149,6 +150,7 @@ const SellerProducts = () => {
     setNameAttribute("");
     setSelectedProduct(null);
     setIsAddValue(false);
+    setShowModal(false);
   }
   const prepareUpdate = (product) => {
     setNameProduct(product.name);
@@ -412,32 +414,7 @@ const SellerProducts = () => {
       console.log(error);
     }
   };
-  const uploadProduct = async () => {
-    if(nameProduct === ""){
-      enqueueSnackbar('Vui lòng nhập tên sản phẩm', { variant: 'warning' });
-    }
-    else if(description === ""){
-      enqueueSnackbar('Vui lòng nhập mô tả sản phẩm', { variant: 'warning' });
-    }
-    else if(stockQuantity === 0){
-      enqueueSnackbar('Vui lòng chọn số lượng hàng tồn của sản phẩm', { variant: 'warning' });
-    }
-    else if(price === 0){
-      enqueueSnackbar('Vui lòng nhập giá sản phẩm', { variant: 'warning' });
-    }
-    else if (images.length === 0) {
-      enqueueSnackbar('Thêm hình ảnh sản phẩm', { variant: 'error' });
-    }
-    else{
-      const isDuplicated = products.filter(item => item.name === nameProduct)
-      if(isDuplicated.length === 0){
-        handleUpload();
-      }
-      else{
-        enqueueSnackbar('Tên sản phẩm bị trùng', { variant: 'warning' });
-      }
-    }
-  }
+  
   const handleCategory = (category) => {
     // setCategoryAdd(prevCategories => [...new Set([...prevCategories, category])]);
     setCategoryAdd([category]);
@@ -457,35 +434,68 @@ const SellerProducts = () => {
       setSalePrice(price);
     }
   }
-  
   const handleUpdate = async () => {
-    
-    const data = {
-      name: nameProduct,
-      description: description,
-      totalStockQuantity: stockQuantity,
-      price: price,
-      isSale: isSale
-    };
-    
-    // Thêm attributes đã được cập nhật vào payload
-    if (attributes.length > 0) {
-      if(areAllAttributeTotalsEqual(attributes)){
-        data.attributes = attributes;
-      }
-      else{
-        enqueueSnackbar('Số lượng tồn của các biến thể không hợp lệ', { variant: 'warning' });
-        return;
-      }
-    }
-    
-    if (salePrice > 0) {
-      data.salePrice = salePrice;
-    }
-    
     try {
+      // Tạo bản sao của attributes để không thay đổi trực tiếp state
+      const processedAttributes = await Promise.all(attributes.map(async (attribute) => {
+        // Nếu attribute có values
+        if (attribute.values && attribute.values.length > 0) {
+          // Xử lý upload image cho từng value
+          const processedValues = await Promise.all(attribute.values.map(async (value) => {
+            // Nếu value có attributeImage là File
+            if (value.attributeImage instanceof File) {
+              const formData = new FormData();
+              formData.append('file', value.attributeImage);
+              
+              try {
+                const response = await axios.post('https://dhkshop.onrender.com/files/upload', formData, {
+                  headers: {
+                    'Content-Type': 'multipart/form-data',
+                  },
+                });
+                
+                // Tạo một bản sao mới của value với fileId
+                return {
+                  ...value,
+                  attributeImage: response.data.file._id
+                };
+              } catch (error) {
+                console.error('Image upload error:', error);
+                // Nếu upload thất bại, giữ nguyên value
+                return value;
+              }
+            }
+            return value;
+          }));
+  
+          // Trả về attribute với values đã được xử lý
+          return {
+            ...attribute,
+            values: processedValues
+          };
+        }
+        return attribute;
+      }));
+  
+      // Chuẩn bị dữ liệu update
+      const data = {
+        name: nameProduct,
+        description: description,
+        totalStockQuantity: stockQuantity,
+        price: price,
+        isSale: isSale,
+        attributes: processedAttributes
+      };
+  
+      // Thêm salePrice nếu có
+      if (salePrice > 0) {
+        data.salePrice = salePrice;
+      }
+      
+      // Gọi API update
       const response = await axios.put(`https://dhkshop.onrender.com/product/${selectedProduct._id}`, data);
-      console.log(response.data);
+      
+      // Thông báo thành công
       enqueueSnackbar('Chỉnh sửa sản phẩm thành công', { variant: 'success' });
       
       // Reset state
@@ -497,11 +507,33 @@ const SellerProducts = () => {
       setAttributes([]);
       setIsSale(false);
       setisOpenModal(false);
-      setShowModal(false)
+      setShowModal(false);
+  
+      // Trả về dữ liệu response nếu cần
+      return response.data;
+  
     } catch (error) {
-      console.error("Error creating product:", error);
+      console.error("Error updating product:", error);
       enqueueSnackbar('Chỉnh sửa sản phẩm thất bại', { variant: 'error' });
+      
+      // Ném lỗi để component có thể xử lý nếu cần
+      throw error;
     }
+  };
+  const uploadProduct = async () => {
+    const uploader = new ProductUploader(enqueueSnackbar, products, images, handleUpload);
+    uploader.uploadProduct(nameProduct, description, stockQuantity, price);
+  }
+  const updateProduct = async () => {
+    const updater = new ProductUpdater(enqueueSnackbar, areAllAttributeTotalsEqual, handleUpdate);
+    updater.updateProduct(selectedProduct, 
+                          nameProduct, 
+                          description, 
+                          stockQuantity, 
+                          price, 
+                          attributes, 
+                          salePrice, 
+                          isSale);
   }
   useEffect(() => {
     const storeID = Cookies.get('store');
@@ -1269,7 +1301,7 @@ const SellerProducts = () => {
                     
                     <div className="w-full md:w-1/2">
                       <label className="block text-sm font-medium text-gray-700 mb-1">Số lượng tồn kho</label>
-                      {attributes.length === 0 ? (
+                      {attributes.length === 0 && !isAddAttr ? (
                         <div className="flex items-center">
                           <button 
                             className="p-2 border border-gray-300 rounded-l-lg hover:bg-gray-100"
@@ -1527,7 +1559,7 @@ const SellerProducts = () => {
               {/* Action Buttons */}
               <div className="pt-4 border-t border-gray-200 flex justify-end gap-3 mt-4">
                 <button
-                  onClick={handleUpdate}
+                  onClick={updateProduct}
                   className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200"
                 >
                   Lưu sản phẩm
