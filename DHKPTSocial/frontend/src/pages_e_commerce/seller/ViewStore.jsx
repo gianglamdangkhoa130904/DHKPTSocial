@@ -5,6 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { FaUser, FaPlus, FaStar, FaHeart, FaComment, FaCalendarAlt, FaShoppingBag } from 'react-icons/fa';
 import axios from 'axios'
 import ProductList from '../components/ProductList';
+import productObserver from '../../design_patterns/ObserverPattern/ObserverPattern';
+
 const socket = io("https://dhkshop.onrender.com");
 
 const ViewStore = () => {
@@ -44,40 +46,68 @@ const ViewStore = () => {
             .then((res) => res.json())
             .then((data) => {
                 setProducts(data)
-                setTopSelling([...data].sort((a, b) => b.soldQuantity - a.soldQuantity).slice(0, 10));
-                setTopRated([...data].sort((a, b) => b.rating - a.rating).slice(0, 10));
-                setOnSale(data.filter((p) => p.isSale));
-                setNewest([...data].sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate)).slice(0, 10));
+                updateLists(data); //fetch dữ liệu lần đầu tiên
             });
 
-        // Lắng nghe sự kiện thêm sản phẩm
+        productObserver.subscribe(updateLists);
+
         socket.on("productAdded", (newProduct) => {
-            setProducts((prevProducts) => [...prevProducts, newProduct]);
+            setProducts((prevProducts) => {
+                const updatedProducts = [...prevProducts, newProduct];
+                productObserver.notify(updatedProducts);
+                return updatedProducts;
+            });
         });
 
-        // Lắng nghe sự kiện cập nhật sản phẩm
         socket.on("productUpdated", (updatedProduct) => {
-            setProducts((prevProducts) =>
-                prevProducts.map((product) =>
+            setProducts((prevProducts) => {
+                const updatedProducts = prevProducts.map(product => 
                     product._id === updatedProduct._id ? updatedProduct : product
-                )
-            );
+                );
+                productObserver.notify(updatedProducts);
+                return updatedProducts;
+            });
         });
 
-        // Lắng nghe sự kiện xóa sản phẩm
         socket.on("productDeleted", ({ productId }) => {
-            setProducts((prevProducts) =>
-                prevProducts.filter((product) => product._id !== productId)
-            );
+            setProducts((prevProducts) => {
+                const updatedProducts = prevProducts.filter(product => product._id !== productId);
+                productObserver.notify(updatedProducts);
+                return updatedProducts;
+            });
         });
 
         return () => {
             socket.off("productAdded");
             socket.off("productUpdated");
             socket.off("productDeleted");
+            productObserver.unsubscribe(updateLists);
         };
     }, []);
-    
+    const updateLists = (updatedProducts) => {
+      setNewest([...updatedProducts]
+          .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate))
+          .slice(0, 10)
+      );
+
+      if (topSellingProducts.length < 10) {
+          setTopSelling([...updatedProducts]
+              .sort((a, b) => b.soldQuantity - a.soldQuantity)
+              .slice(0, 10)
+          );
+      }
+
+      if (topRatedProducts.length < 10) {
+          setTopRated([...updatedProducts]
+              .sort((a, b) => b.rating - a.rating)
+              .slice(0, 10)
+          );
+      }
+
+      if (onSaleProducts.length < 10) {
+          setOnSale(updatedProducts.filter((p) => p.isSale));
+      }
+  };
   return (
     <div className='min-h-screen bg-gray-50'>
       {/* Banner */}
