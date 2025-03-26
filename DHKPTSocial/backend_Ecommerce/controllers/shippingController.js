@@ -86,3 +86,42 @@ export const addShippingStage = async (req, res) => {
     res.status(500).json({ message: "Lỗi thêm chặng vận chuyển", error });
   }
 };
+
+export const createShipping = async (req, res) => {
+  try{
+    const {
+      orderId,
+      recipientName,
+      recipientPhone,
+      recipientAddress,
+      shippingStages, // Danh sách các giai đoạn vận chuyển
+    } = req.body;
+
+    // Kiểm tra nếu đơn hàng đã có shipping
+    const existingShipping = await Shipping.findOne({ orderId });
+    if (existingShipping) {
+      return res.status(400).json({ success: false, message: "Shipping already exists for this order" });
+    }
+
+    // Kiểm tra xem orderId có tồn tại trong hệ thống không
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    const newShipping = new Shipping({
+      orderId,
+      recipientName,
+      recipientPhone,
+      recipientAddress,
+      shippingStages: shippingStages, // Gán danh sách các giai đoạn vận chuyển
+    });
+
+    await newShipping.save();
+
+    res.status(201).json({ success: true, data: newShipping });
+  }
+  catch (error) {
+    res.status(500).json({ success: false, message: "Server error", error });
+  }
+} 
