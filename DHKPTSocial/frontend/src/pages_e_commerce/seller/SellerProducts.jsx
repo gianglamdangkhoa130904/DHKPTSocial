@@ -1269,7 +1269,7 @@ const SellerProducts = () => {
                     
                     <div className="w-full md:w-1/2">
                       <label className="block text-sm font-medium text-gray-700 mb-1">Số lượng tồn kho</label>
-                      {attributes.length === 0 ? (
+                      {attributes.length === 0 && !isAddAttr ? (
                         <div className="flex items-center">
                           <button 
                             className="p-2 border border-gray-300 rounded-l-lg hover:bg-gray-100"
