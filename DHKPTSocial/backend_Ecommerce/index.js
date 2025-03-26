@@ -22,7 +22,8 @@ const io = new Server(server, {
     cors: {
         origin: [
             "http://dhkptsocial.site", 
-            "https://dhkptsocial.netlify.app"
+            "https://dhkptsocial.netlify.app",
+            "http://giyuksite.online"
         ], // Đảm bảo đúng cổng của frontend
         credentials: true,
     },
@@ -34,7 +35,8 @@ app.use(
     cors({
         origin: [
             "http://dhkptsocial.site", 
-            "https://dhkptsocial.netlify.app"
+            "https://dhkptsocial.netlify.app",
+            "http://giyuksite.online"
         ],
         credentials: true,
     })
