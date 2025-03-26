@@ -59,18 +59,17 @@ router.get("/manager/:userId", async (req, res) => {
       res.status(500).json({ message: "Lỗi server", error: error.message });
   }
 });
-router.get('/', async (request, response) => {
-  try {
-    const objects = await Store.find({});
+router.get('/', async (req, res) => {
+    try {
+        const stores = await Store.find({})
+            .populate('follower', 'name email')
+            .populate('manager', 'name email');
 
-    return response.status(200).json({
-      count: objects.length,
-      data: objects,
-    });
-  } catch (error) {
-    console.log(error.message);
-    response.status(500).send({ message: error.message });
-  }
+        // Gửi kết quả về client
+        res.send(stores);
+    } catch (error) {
+        res.status(500).send({ message: 'Lỗi khi lấy dữ liệu store', error: error.message });
+    }
 });
 router.post('/', async(req, res) => {
   if(req.body.logo !== ""){

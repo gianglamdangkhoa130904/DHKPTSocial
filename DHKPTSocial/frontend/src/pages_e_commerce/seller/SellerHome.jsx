@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import SellerHomeNav from '../components/SellerHomeNav'
 import Cookies from 'js-cookie';
-import { FaStore, FaBox, FaShippingFast, FaTags, FaChartLine, FaFileInvoiceDollar, FaAdversal, FaPlus, FaEdit } from "react-icons/fa";
+import { FaStore, FaBox, FaShippingFast, FaTags, FaChartLine, FaAdversal, FaPlus, FaEdit } from "react-icons/fa";
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
+import {FaArrowRightFromBracket}from "react-icons/fa6"
 import axios from 'axios'
 const SellerHome = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -46,7 +47,22 @@ const SellerHome = () => {
       <div className={`min-h-screen transition-all duration-500 w-4/5`}>
         <div className='p-6'>
           <div className='bg-white rounded-xl shadow p-6 mb-6'>
-            <h1 className='text-2xl font-bold text-gray-800 mb-4'>Dashboard</h1>
+            <div className='flex items-center mb-4'>
+              <h1 className='text-2xl font-bold text-gray-800  w-1/2'>Dashboard</h1>
+              <div className=' w-1/2 flex justify-end items-center'>
+                <div className='bg-gradient-to-r from-purple-600 to-pink-600 flex items-center gap-2 text-white rounded-md shadow-md p-2 cursor-pointer
+                hover:scale-105 transition duration-300'
+                onClick={() => {
+                  navigate('/e-commerce/login');
+                  Cookies.remove('customerId');
+                  Cookies.remove('customerName');
+                  Cookies.remove('store');
+                }}>
+                  <FaArrowRightFromBracket />
+                  <p className='font-bold'>Đăng xuất</p>
+                </div>
+              </div>
+            </div>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
               {/* Thẻ thống kê 1 */}
               <div className='bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-4 text-white'>

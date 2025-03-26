@@ -28,7 +28,7 @@ function Navigation() {
         {categories.map((category) => (
           <NavItem
             key={category._id}
-            icon={`https://dhkptsocial.onrender.com/files/download/${category.image}`}
+            icon={category.image}
             text={category.name.toUpperCase()}
             alt={category.name}
           />

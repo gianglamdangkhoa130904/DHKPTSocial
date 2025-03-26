@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FaAngleLeft, FaAngleRight, FaStar, FaShoppingBag, FaHeart } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
 
-const ProductList = ({listTitle, productList, maxVisible, scrollLength}) => {
-    const navigate = useNavigate();
+const ProductList = ({listTitle, productList}) => {
     const [title, setTitle] = useState("");
     const [products, setProducts] = useState([]);
     const [startIndex, setStartIndex] = useState(0);
@@ -11,7 +9,7 @@ const ProductList = ({listTitle, productList, maxVisible, scrollLength}) => {
     const sliderRef = useRef(null);
     
     // Đảm bảo không vượt quá số lượng sản phẩm hiển thị
-    const maxVisibleProducts = maxVisible;
+    const maxVisibleProducts = 5;
     const maxStartIndex = Math.max(0, productList.length - maxVisibleProducts);
     
     const handleTurnLeft = () => {
@@ -40,7 +38,7 @@ const ProductList = ({listTitle, productList, maxVisible, scrollLength}) => {
       }, [startIndex]);
       
       // Tính toán vị trí transform
-      const translateX = `-${startIndex * (scrollLength)}px`; 
+      const translateX = `-${startIndex * (200 + 10)}px`; 
   return (
     <div className='w-full py-6'>
       <div className='flex flex-col items-start justify-between w-max'>
@@ -82,8 +80,7 @@ const ProductList = ({listTitle, productList, maxVisible, scrollLength}) => {
             {productList.map((product, index) => (
               <div 
                 key={index} 
-                className='w-[200px] flex-none bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-xl cursor-pointer'
-              onClick={() => navigate(`/product/${product._id}`)}
+                className='w-[200px] flex-none bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-xl'
               >
                 {/* Product Image */}
                 <div className='relative w-full h-[180px] bg-gray-100 overflow-hidden group'>
@@ -102,10 +99,10 @@ const ProductList = ({listTitle, productList, maxVisible, scrollLength}) => {
                   </button> */}
                   
                   {/* Quick action button appearing on hover */}
-                  {/* <div className='absolute bottom-0 left-0 right-0 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-2 flex justify-center items-center transform translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 cursor-pointer'>
+                  <div className='absolute bottom-0 left-0 right-0 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-2 flex justify-center items-center transform translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 cursor-pointer'>
                     <FaShoppingBag className='mr-2' />
                     <span className='font-medium'>Thêm vào giỏ</span>
-                  </div> */}
+                  </div>
                 </div>
                 
                 {/* Product Info */}

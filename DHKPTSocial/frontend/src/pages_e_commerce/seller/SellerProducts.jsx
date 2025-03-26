@@ -27,7 +27,6 @@ const SellerProducts = () => {
   const totalPages = Math.ceil(products.length / itemsPerPage);
   const [listCategory, setListCategory] = useState([{name: 'all'}]);
   
-
   const [nameProduct, setNameProduct] = useState("");
   const [description, setDescription] = useState("");
   const [categoryAdd, setCategoryAdd] = useState([]);
@@ -49,6 +48,117 @@ const SellerProducts = () => {
   const [imageValue, setImageValue] = useState("");
   const [nameAttribute, setNameAttribute] = useState("");
 
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const areAllAttributeTotalsEqual = (attributesArray) => {
+    if (!attributesArray || attributesArray.length === 0) {
+      return true;
+    }
+    
+    // Tính tổng số lượng tồn kho cho mỗi biến thể
+    const attributeTotals = attributesArray.map(attribute => {
+      let total = 0;
+      attribute.values.forEach(value => {
+        total += value.stockQuantity;
+      });
+      return total;
+    });
+    
+    // Nếu chỉ có 1 biến thể hoặc không có biến thể nào
+    if (attributeTotals.length <= 1) {
+      return true;
+    }
+    
+    // Kiểm tra xem tất cả các tổng có bằng nhau không
+    const firstTotal = attributeTotals[0];
+    return attributeTotals.every(total => total === firstTotal);
+  };
+
+  const handleStockChange = (attributeIndex, valueIndex, newValue) => {
+    // Tạo bản sao để không thay đổi trực tiếp state
+    const updatedAttributes = [...attributes];
+    
+    // Chuyển đổi giá trị thành số và đảm bảo là số dương
+    const newStock = parseInt(newValue, 10);
+    if (!isNaN(newStock) && newStock >= 0) {
+      updatedAttributes[attributeIndex].values[valueIndex].stockQuantity = newStock;
+      setAttributes(updatedAttributes);
+      
+      // Cập nhật tổng số lượng tồn kho
+      updateTotalStockQuantity(updatedAttributes);
+    }
+  };
+  
+  // Xử lý khi tăng số lượng
+  const handleIncreaseStock = (attributeIndex, valueIndex) => {
+    const updatedAttributes = [...attributes];
+    updatedAttributes[attributeIndex].values[valueIndex].stockQuantity += 1;
+    setAttributes(updatedAttributes);
+    
+    // Cập nhật tổng số lượng tồn kho
+    updateTotalStockQuantity(updatedAttributes);
+  };
+  
+  // Xử lý khi giảm số lượng
+  const handleDecreaseStock = (attributeIndex, valueIndex) => {
+    const updatedAttributes = [...attributes];
+    const currentStock = updatedAttributes[attributeIndex].values[valueIndex].stockQuantity;
+    if (currentStock > 0) {
+      updatedAttributes[attributeIndex].values[valueIndex].stockQuantity -= 1;
+      setAttributes(updatedAttributes);
+      
+      // Cập nhật tổng số lượng tồn kho
+      updateTotalStockQuantity(updatedAttributes);
+    }
+  };
+  
+  // Hàm tính tổng số lượng tồn kho từ tất cả các biến thể
+  const updateTotalStockQuantity = (attributesArray) => {
+    let totalStock = 0;
+    let totalVariants = 0;
+    
+    attributesArray.forEach(attribute => {
+      attribute.values.forEach(value => {
+        totalStock += value.stockQuantity;
+      });
+      totalVariants++;
+    });
+    
+    // Tính trung bình - nếu không có biến thể nào thì giữ nguyên stockQuantity
+    if (totalVariants > 0) {
+      setStockQuantity(Math.round(totalStock / totalVariants));
+    }
+  };
+
+  const resetState = () => {
+    setNameProduct("");
+    setDescription("");
+    setStockQuantity(10);
+    setPrice(0);
+    setSalePrice(0);
+    setIsSale(false);
+    setIsAddAttr(false);
+    setImages([]);
+    setAttributes([]);
+    setNewAttribute("");
+    setNameValue("");
+    setStockValue(1);
+    setValuePrice("");
+    setImageValue("");
+    setNameAttribute("");
+    setSelectedProduct(null);
+    setIsAddValue(false);
+  }
+  const prepareUpdate = (product) => {
+    setNameProduct(product.name);
+    setDescription(product.description);
+    setStockQuantity(product.totalStockQuantity);
+    setPrice(product.price);
+    setSalePrice(product.salePrice);
+    setAttributes(product.attributes);
+    setIsSale(product.isSale);
+  }
   const handleAddValue = () => {
 
     if(nameAttribute === ""){
@@ -348,6 +458,51 @@ const SellerProducts = () => {
     }
   }
   
+  const handleUpdate = async () => {
+    
+    const data = {
+      name: nameProduct,
+      description: description,
+      totalStockQuantity: stockQuantity,
+      price: price,
+      isSale: isSale
+    };
+    
+    // Thêm attributes đã được cập nhật vào payload
+    if (attributes.length > 0) {
+      if(areAllAttributeTotalsEqual(attributes)){
+        data.attributes = attributes;
+      }
+      else{
+        enqueueSnackbar('Số lượng tồn của các biến thể không hợp lệ', { variant: 'warning' });
+        return;
+      }
+    }
+    
+    if (salePrice > 0) {
+      data.salePrice = salePrice;
+    }
+    
+    try {
+      const response = await axios.put(`https://dhkshop.onrender.com/product/${selectedProduct._id}`, data);
+      console.log(response.data);
+      enqueueSnackbar('Chỉnh sửa sản phẩm thành công', { variant: 'success' });
+      
+      // Reset state
+      setNameProduct("");
+      setDescription("");
+      setStockQuantity(10);
+      setPrice(0);
+      setSalePrice(0);
+      setAttributes([]);
+      setIsSale(false);
+      setisOpenModal(false);
+      setShowModal(false)
+    } catch (error) {
+      console.error("Error creating product:", error);
+      enqueueSnackbar('Chỉnh sửa sản phẩm thất bại', { variant: 'error' });
+    }
+  }
   useEffect(() => {
     const storeID = Cookies.get('store');
     axios.get('https://dhkshop.onrender.com/categories')
@@ -367,6 +522,7 @@ const SellerProducts = () => {
       console.error('Error fetching products:', error);
     });
   }, [])
+
   useEffect(() => {
           // Lắng nghe sự kiện thêm sản phẩm
           socket.on("productAdded", (newProduct) => {
@@ -503,7 +659,7 @@ const SellerProducts = () => {
                       </td>
                       <td className='px-6 py-4 whitespace-nowrap text-sm font-medium'>
                         <div className='flex space-x-2'>
-                          <button className='text-blue-600 hover:text-blue-900' title='Chỉnh sửa'>
+                          <button className='text-blue-600 hover:text-blue-900' title='Chỉnh sửa' onClick={() => {setShowModal(true); prepareUpdate(product); setSelectedProduct(product)}}>
                             <FaEdit />
                           </button>
                           <button className={`${product.active ? 'text-yellow-600 hover:text-yellow-900' : 'text-green-600 hover:text-green-900'}`} title={product.active ? 'Ngừng bán' : 'Kích hoạt'}>
@@ -685,7 +841,7 @@ const SellerProducts = () => {
               <div className="flex items-center justify-between pb-4 border-b border-gray-200 mb-6">
                 <h2 className="text-2xl font-bold text-gray-800">Thêm sản phẩm mới</h2>
                 <button 
-                  onClick={() => setisOpenModal(false)}
+                  onClick={() => {setisOpenModal(false); resetState()}}
                   className="p-2 rounded-full hover:bg-gray-100 transition-colors"
                 >
                   <FaTimes className="text-gray-500" />
@@ -1026,7 +1182,358 @@ const SellerProducts = () => {
                   Lưu sản phẩm
                 </button>
                 <button
-                  onClick={() => setisOpenModal(false)}
+                  onClick={() => {setisOpenModal(false); resetState()}}
+                  className="px-6 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-all duration-200"
+                >
+                  Hủy
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className={`fixed flex inset-0 items-center justify-center z-50 bg-black bg-opacity-70 backdrop-blur-sm transition-opacity duration-300 ${showModal ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+        <div className="container mx-auto flex flex-col lg:flex-row gap-6 px-4 max-w-6xl justify-center">
+          {/* Form Container */}
+          <div className={`bg-white rounded-xl shadow-2xl w-full lg:w-2/3 transform transition-all duration-500 ease-in-out ${showModal ? "translate-y-0" : "translate-y-10 pointer-events-none"}`}>
+            <div className="p-6">
+              {/* Header */}
+              <div className="flex items-center justify-between pb-4 border-b border-gray-200 mb-6">
+                <h2 className="text-2xl font-bold text-gray-800">Chỉnh sửa sản phẩm</h2>
+                <button 
+                  onClick={() => {setShowModal(false); resetState()}}
+                  className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                >
+                  <FaTimes className="text-gray-500" />
+                </button>
+              </div>
+              
+              {/* Scrollable Form */}
+              <div className="overflow-y-auto max-h-[500px] px-2 custom-scrollbar">
+                {/* Basic Information */}
+                <div className="space-y-4 mb-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Tên sản phẩm</label>
+                    <input 
+                      value={nameProduct} 
+                      type="text" 
+                      onChange={(e) => setNameProduct(e.target.value)}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 focus:outline-none" 
+                      placeholder="VD: Áo thun unisex form rộng" 
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Mô tả sản phẩm</label>
+                    <textarea 
+                      value={description} 
+                      onChange={(e) => setDescription(e.target.value)}
+                      rows="3"
+                      style={{resize: 'none'}}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 focus:outline-none" 
+                      placeholder="Mô tả chi tiết về sản phẩm của bạn" 
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Danh mục</label>
+                    <select
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white transition duration-200 focus:outline-none"
+                      onChange={(e) => handleCategory(e.target.value)}
+                    >
+                      {listCategory.map((category, index) => (
+                        <option key={index} value={category._id}>
+                          {category.name === 'all' ? 'Tất cả danh mục' : category.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                
+                {/* Pricing and Stock */}
+                <div className="space-y-4 mb-6">
+                  <div className="flex flex-col md:flex-row gap-4">
+                    <div className="w-full md:w-1/2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Giá sản phẩm</label>
+                      <div className="relative">
+                        <input 
+                          value={price} 
+                          type="number" 
+                          onChange={(e) => handlePrice(e.target.value)}
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 focus:outline-none" 
+                          placeholder="Nhập giá bán" 
+                        />
+                        <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">đ</span>
+                      </div>
+                    </div>
+                    
+                    <div className="w-full md:w-1/2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Số lượng tồn kho</label>
+                      {attributes.length === 0 ? (
+                        <div className="flex items-center">
+                          <button 
+                            className="p-2 border border-gray-300 rounded-l-lg hover:bg-gray-100"
+                            onClick={() => {stockQuantity <= 10 ? setStockQuantity(stockQuantity) : setStockQuantity(stockQuantity - 1)}}
+                          >
+                            <FaMinus className="text-gray-600" />
+                          </button>
+                          <input
+                            type="number"
+                            value={stockQuantity}
+                            onChange={(e) => setStockQuantity(Number(e.target.value))}
+                            className="w-20 text-center p-2 border-y border-gray-300 focus:outline-none"
+                          />
+                          <button 
+                            className="p-2 border border-gray-300 rounded-r-lg hover:bg-gray-100"
+                            onClick={() => {stockQuantity >= 1000 ? setStockQuantity(stockQuantity) : setStockQuantity(stockQuantity + 1)}}
+                          >
+                            <FaPlus className="text-gray-600" />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="p-3 border border-gray-300 rounded-lg bg-gray-50">
+                          {stockQuantity}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="text-sm font-medium text-gray-700">Áp dụng giảm giá</label>
+                      <button 
+                        onClick={() => setIsSale(!isSale)}
+                        className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors focus:outline-none ${isSale ? 'bg-gradient-to-r from-purple-600 to-pink-600' : 'bg-gray-300'}`}
+                      >
+                        <span className={`inline-block w-4 h-4 transform transition-transform bg-white rounded-full ${isSale ? 'translate-x-6' : 'translate-x-1'}`} />
+                      </button>
+                    </div>
+                    
+                    {isSale && (
+                      <div className="relative">
+                        <input 
+                          type="number" 
+                          value={salePrice}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === "" || Number(value) > price || Number(value) < 0) {
+                              setSalePrice(salePrice);
+                            } else {
+                              setSalePrice(value);
+                            }
+                          }}
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 focus:outline-none" 
+                          placeholder="Nhập giá sau khi giảm" 
+                        />
+                        <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">đ</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                {/* Attributes/Variants */}
+                <div className="mb-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-lg font-medium text-gray-700">Biến thể sản phẩm</label>
+                    {!isAddAttr && (
+                      <button 
+                        onClick={handleOpenAttribute}
+                        className="flex items-center gap-1 px-3 py-1 rounded-md bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm hover:opacity-90 transition-opacity"
+                      >
+                        <FaPlus className="text-xs" /> Thêm biến thể
+                      </button>
+                    )}
+                  </div>
+                  
+                  {/* Existing Attributes Display */}
+                  {attributes.length > 0 && (
+                    <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                      <h4 className="font-medium text-gray-700 mb-2">Biến thể hiện tại</h4>
+                      {attributes.map((attribute, index) => (
+                        <div key={index} className="mb-3 last:mb-0">
+                          <div className="flex items-center justify-between">
+                            <h5 className="font-medium text-purple-700">{attribute.name}</h5>
+                            <span className="text-xs bg-purple-100 text-purple-800 rounded-full px-2 py-1">
+                              {attribute.values.length} giá trị
+                            </span>
+                          </div>
+                          <div className="mt-2 space-y-2">
+                            {attribute.values.map((item, subIndex) => (
+                              <div key={subIndex} className="flex items-center justify-between bg-white p-2 rounded-md shadow-sm">
+                                <span>{item.attributeName}</span>
+                                <div className="flex items-center gap-4">
+                                  <div className="flex items-center">
+                                    <span className="text-sm text-gray-500 mr-2">SL:</span>
+                                    <div className="flex items-center border border-gray-300 rounded">
+                                      <button 
+                                        className="px-2 py-1 text-gray-500 hover:bg-gray-100"
+                                        onClick={() => handleDecreaseStock(index, subIndex)}
+                                      >
+                                        -
+                                      </button>
+                                      <input
+                                        type="number"
+                                        value={item.stockQuantity}
+                                        onChange={(e) => handleStockChange(index, subIndex, e.target.value)}
+                                        className="w-12 text-center py-1 focus:outline-none"
+                                      />
+                                      <button 
+                                        className="px-2 py-1 text-gray-500 hover:bg-gray-100"
+                                        onClick={() => handleIncreaseStock(index, subIndex)}
+                                      >
+                                        +
+                                      </button>
+                                    </div>
+                                  </div>
+                                  <span className="text-sm font-medium">{Number(item.priceAttribute).toLocaleString("vi-VN")} đ</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* Add New Attribute UI */}
+                  {isAddAttr && (
+                    <div className="border border-gray-200 rounded-lg p-4">
+                      <h4 className="font-medium text-gray-700 mb-3">Thêm biến thể mới</h4>
+                      
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-sm text-gray-600 mb-1">Tên biến thể</label>
+                          <input 
+                            type="text" 
+                            maxLength={30}
+                            value={nameAttribute}
+                            onChange={(e) => setNameAttribute(e.target.value)}
+                            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent transition focus:outline-none" 
+                            placeholder="VD: Màu sắc, Kích thước, ..." 
+                          />
+                        </div>
+                        
+                        {!isAddValue ? (
+                          <button 
+                            onClick={() => setIsAddValue(!isAddValue)}
+                            className="w-full py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-md hover:opacity-90 transition-opacity"
+                          >
+                            Thêm giá trị cho biến thể
+                          </button>
+                        ) : (
+                          <div className="border-t border-gray-200 pt-3 mt-3">
+                            <h5 className="font-medium text-gray-700 mb-2">Thêm giá trị</h5>
+                            
+                            <div className="space-y-3">
+                              <div>
+                                <label className="block text-sm text-gray-600 mb-1">Tên giá trị</label>
+                                <input 
+                                  type="text"
+                                  maxLength={30}
+                                  value={nameValue}
+                                  onChange={(e) => setNameValue(e.target.value)}
+                                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent transition focus:outline-none" 
+                                  placeholder="VD: Đỏ, XL, ..." 
+                                />
+                              </div>
+                              
+                              <div>
+                                <label className="block text-sm text-gray-600 mb-1">Số lượng</label>
+                                <div className="flex items-center">
+                                  <button 
+                                    className="p-2 border border-gray-300 rounded-l-md hover:bg-gray-100"
+                                    onClick={() => {stockValue <= 1 ? setStockValue(stockValue) : setStockValue(stockValue - 1)}}
+                                  >
+                                    <FaMinus className="text-gray-600" />
+                                  </button>
+                                  <input
+                                    type="number"
+                                    value={stockValue}
+                                    readOnly
+                                    className="w-20 text-center p-2 border-y border-gray-300 focus:outline-none"
+                                  />
+                                  <button 
+                                    className="p-2 border border-gray-300 rounded-r-md hover:bg-gray-100"
+                                    onClick={() => {stockValue >= 1000 ? setStockValue(stockValue) : setStockValue(stockValue + 1)}}
+                                  >
+                                    <FaPlus className="text-gray-600" />
+                                  </button>
+                                </div>
+                              </div>
+                              
+                              <div>
+                                <label className="block text-sm text-gray-600 mb-1">Phụ phí biến thể</label>
+                                <input 
+                                  type="number"
+                                  min={1}
+                                  max={50000000}
+                                  value={valuePrice}
+                                  onChange={(e) => setValuePrice(Number(e.target.value))}
+                                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent transition focus:outline-none" 
+                                  placeholder="Nhập phụ phí cho biến thể này" 
+                                />
+                              </div>
+                              
+                              <div>
+                                <label className="block text-sm text-gray-600 mb-1">Hình ảnh biến thể</label>
+                                <input 
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={(e) => setImageValue(e.target.files[0])}
+                                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none" 
+                                />
+                              </div>
+                              
+                              <button 
+                                onClick={handleAddValue}
+                                className="w-full py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-md hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                              >
+                                <FaPlus className="text-xs" /> Thêm giá trị này
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Preview of new attribute */}
+                        {newAttribute.values.length > 0 && (
+                          <div className="border-t border-gray-200 pt-3 mt-3">
+                            <h5 className="font-medium text-purple-700 mb-2">{nameAttribute}</h5>
+                            <div className="bg-gray-50 rounded-md p-3 space-y-2">
+                              {newAttribute.values.map((item, index) => (
+                                <div key={index} className="flex items-center justify-between bg-white p-2 rounded-md shadow-sm">
+                                  <span className="font-medium">{item.attributeName}</span>
+                                  <div className="flex items-center gap-4">
+                                    <span className="text-sm text-gray-500">SL: {item.stockQuantity}</span>
+                                    <span className="text-sm font-medium">{Number(item.priceAttribute).toLocaleString("vi-VN")} đ</span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                            
+                            <button 
+                              onClick={handleAddAttribute}
+                              className="w-full py-2 mt-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-md hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                            >
+                              <FaCheck className="text-xs" /> Hoàn tất thêm biến thể
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Action Buttons */}
+              <div className="pt-4 border-t border-gray-200 flex justify-end gap-3 mt-4">
+                <button
+                  onClick={handleUpdate}
+                  className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200"
+                >
+                  Lưu sản phẩm
+                </button>
+                <button
+                  onClick={() => {setShowModal(false); resetState()}}
                   className="px-6 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-all duration-200"
                 >
                   Hủy

@@ -6,10 +6,12 @@ import Cookies from 'js-cookie'
 import { GoTriangleDown } from 'react-icons/go';
 import io from "socket.io-client";
 import { useSnackbar } from 'notistack';
+import { useNavigate } from 'react-router-dom';
 
 const socket = io("https://dhkshop.onrender.com");
 const SellerAds = () => {
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
   const [layout, setLayout] = useState([]);
   const [verticalLayout, setVerticalLayout] = useState([]);
   const [isAddAds, setIsAddAds] = useState(false);
@@ -177,7 +179,19 @@ const SellerAds = () => {
       <div className='min-h-screen w-4/5'>
         <div className='p-6'>
           <div className='bg-white rounded-xl shadow p-6 mb-6'>
-            <h1 className='text-2xl font-bold text-gray-800 mb-4'>Quản lý giao diện gian hàng</h1>
+            <div className='flex justify-center items-center'>
+              <h1 className='text-2xl font-bold text-gray-800 mb-4 w-1/2 text-start'>Quản lý giao diện gian hàng</h1>
+              <div className=' w-1/2 flex justify-end'>
+                <div className='p-4 rounded-full bg-purple-200 shadow-md cursor-pointer transition duration-400 
+                hover:scale-105 hover:opacity-90'
+                onClick={() =>  navigate(`/e-commerce/seller/view-store/${store}`)}>
+                  <FaEye className='text-purple-600 text-lg'/>
+                </div>
+                
+              </div>
+              
+            </div>
+            
             <div>
               <div className='flex justify-between mb-4 items-end'>
                 <button className='bg-purple-600 text-white px-4 py-2 rounded-lg flex items-center font-semibold

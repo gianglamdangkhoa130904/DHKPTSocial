@@ -5,11 +5,13 @@ import Header from "./Header";
 import { Star } from "lucide-react";
 import defaultImage from "../../../src/assets/avt.jpg";
 import Cookies from "js-cookie";
-
+import ProductReview from "../components/ProductReview";
+import ChatBox from "../components/ChatBox";
 const ProductDetail = () => {
     const { id } = useParams();
     console.log("ProductDetail ID from URL:", id);
-
+    
+    const [showChat, setShowChat] = useState(false);
     const [product, setProduct] = useState(null);
     const [quantity, setQuantity] = useState(1);
     const [selectedImage, setSelectedImage] = useState(null); // ✅ Di chuyển lên đây
@@ -65,6 +67,26 @@ const ProductDetail = () => {
     //     // Cập nhật giá sản phẩm
     //     setUnitPrice(basePrice + attributesPrice);
     // };
+    const getAvailableStock = () => {
+        if (!attributes || attributes.length === 0) return 0;
+
+        const firstGroup = attributes[0];
+        const totalInFirstGroup = firstGroup.values.reduce(
+            (sum, val) => sum + val.stockQuantity,
+            0
+        );
+
+        // Kiểm tra các nhóm khác có tổng trùng khớp không
+        const allMatch = attributes.every((attr) => {
+            const total = attr.values.reduce(
+                (sum, val) => sum + val.stockQuantity,
+                0
+            );
+            return total === totalInFirstGroup;
+        });
+
+        return allMatch ? totalInFirstGroup : 0;
+    };
     const handleAddToCart = async () => {
         try {
             let userId = Cookies.get("customerId"); 
@@ -159,7 +181,7 @@ const ProductDetail = () => {
     return (
         <main className="flex flex-col justify-center items-center">
             <Header />
-            <section className="max-w-full w-[800px] mt-[200px]">
+            <section className="max-w-full w-[800px] mt-[50px]">
                 <div className="max-md:mr-2 max-md:max-w-full">
                     <div className="flex gap-5 max-md:flex-col">
                         {/* Image Gallery Section */}
@@ -385,7 +407,7 @@ const ProductDetail = () => {
                                         {/* Nút tăng số lượng */}
                                         <button
                                             onClick={() =>
-                                                setQuantity(quantity + 1)
+                                                setQuantity(Math.min(getAvailableStock(), quantity + 1))
                                             }
                                             aria-label="Increase quantity"
                                         >
@@ -396,7 +418,10 @@ const ProductDetail = () => {
                                             />
                                         </button>
                                     </div>
-
+                                    <span className="text-sm text-gray-600 flex items-center">
+                                        {getAvailableStock()} sản phẩm có
+                                        sẵn
+                                    </span>   
                                     {/* Nút thêm vào giỏ hàng */}
                                     <button
                                         onClick={handleAddToCart}
@@ -416,6 +441,7 @@ const ProductDetail = () => {
                         </article>
                     </div>
                 </div>
+                <ProductReview productId={product._id} />
                 {store && (
                     <section className="overflow-hidden px-4 py-6 mt-5 w-full rounded border border-zinc-300">
                         <div className="flex gap-5 max-md:flex-col">
@@ -472,6 +498,13 @@ const ProductDetail = () => {
                     </section>
                 )}
             </section>
+            {showChat && (
+                <ChatBox
+                    storeId={store._id}
+                    storeName={store.name}
+                    onClose={() => setShowChat(false)}
+                />
+            )}
         </main>
     );
 };

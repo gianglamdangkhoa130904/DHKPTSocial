@@ -4,20 +4,19 @@ import PopularCategories from '../components/PopularCategories';
 import PopularProducts from '../components/PopularProducts';
 import NewProducts from '../components/NewProducts';
 import Advertisement from '../components/Advertisement';
-
+import Ads1 from '../../../public/Ads1.jpg'
 const CustomerHomePage = () => {
   return (
     <div className="overflow-x-hidden ">
       <Header />
       <div className="w-screen">
-        <div className="w-full bg-violet-500 h-96 mt-48 mb-9"></div>
+        <div className="w-full h-full flex justify-center h-96 mt-20 mb-9">
+          <img src={Ads1} alt="" classname=' w-full h-full'/>
+        </div>
       </div>
       <PopularCategories />
       <div className="container mx-auto my-9 flex gap-5 max-md:flex-col">
-        <aside className="w-[20%] max-md:ml-0 max-xl:w-full">
-          <Advertisement />
-        </aside>
-        <main className="w-[80%] max-md:ml-0 max-md:w-full ml-11">
+        <main className="min-w-[100%] max-md:ml-0 max-md:w-full ml-11">
           <PopularProducts />
           <NewProducts />
         </main>

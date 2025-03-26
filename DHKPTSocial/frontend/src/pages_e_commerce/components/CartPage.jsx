@@ -102,7 +102,7 @@ const CartPage = () => {
     return (
         <div>
             <Header />
-            <section className="container mx-auto px-5 mt-64">
+            <section className="container mx-auto px-5 mt-10">
                 <header className="text-start mt-4">
                     <h1 className="text-2xl font-semibold">GIỎ HÀNG CỦA BẠN</h1>
                     <p className="mt-2 text-lg text-gray-600">

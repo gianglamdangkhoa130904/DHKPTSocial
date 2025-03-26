@@ -137,13 +137,63 @@ const SellerOrder = () => {
     }
     axios.put(`https://dhkshop.onrender.com/order/${selectedOrder._id}`,newStatus)
     .then((response) => {
-      setShowModal(false);
-      setSelectedOrder(null);
       if(storeAddress === orderAddress){
         console.log("Giao cùng tỉnh, giao hàng đến khách hàng");
+        axios.get(`https://dhkshop.onrender.com/shipper/getToShip/${storeAddress}`)
+        .then((response) => {
+          const shippingStage = {
+            handler: response.data.data._id,
+            fromLocation: store.address,
+            toLocation: selectedOrder.address,
+            status: "in_transit"
+          };
+          const shippingStages = [shippingStage];
+          const shipping = {
+            orderId: selectedOrder._id,
+            status: "in_transit",
+            shippingStages: shippingStages,
+            recipientName: selectedOrder.customer?.name,
+            recipientPhone: selectedOrder.customer?.phone,
+            recipientAddress: selectedOrder.address
+          }
+          axios.post('https://dhkshop.onrender.com/shipping', shipping)
+          .then((response) => {
+            console.log(response.data);
+            setShowModal(false);
+            setSelectedOrder(null);
+          })
+        })
+        
       }
       else{
         console.log("Giao liên tỉnh, giao hàng đến kho");
+        axios.get(`https://dhkshop.onrender.com/shipper/getToShip/${storeAddress}`)
+        .then((response) => {
+          const shippingStage = {
+            handler: response.data.data._id,
+            fromLocation: store.address,
+            toLocation: response.data.data.assignedWarehouse.location.address + ", " + response.data.data.assignedWarehouse.location.district + ", " + response.data.data.assignedWarehouse.location.ward + ", " + response.data.data.assignedWarehouse.location.province,
+            status: "in_transit"
+          };
+          const shippingStages = [shippingStage];
+          const shipping = {
+            orderId: selectedOrder._id,
+            status: "in_transit",
+            shippingStages: shippingStages,
+            recipientName: selectedOrder.customer?.name,
+            recipientPhone: selectedOrder.customer?.phone,
+            recipientAddress: selectedOrder.address
+          }
+          axios.post('https://dhkshop.onrender.com/shipping', shipping)
+          .then((response) => {
+            console.log(response.data);
+            setShowModal(false);
+            setSelectedOrder(null);
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+        })
       }
     })
   }

@@ -1,21 +1,56 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import HeaderTop from "./HeaderTop";
 import Navigation from "./Navigation";
 
 function Header() {
-  return (
-    <header className="fixed top-0 left-0 w-full bg-white border-b border-solid border-b-zinc-300 z-50 shadow-md">
-      <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-        rel="stylesheet"
-      />
+  const [showHeaderTop, setShowHeaderTop] = useState(true);
+  const [isAtTop, setIsAtTop] = useState(true);
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setIsAtTop(currentScrollY < 50);
+
+      if (currentScrollY > lastScrollY) {
+        setShowHeaderTop(false);
+      } else {
+        setShowHeaderTop(true);
+      }
+
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const headerTopHeight = 92; 
+return (
+  <>
+    {/* HeaderTop */}
+    <div
+      className={`fixed top-0 left-0 w-full z-50 bg-white transition-all duration-300 ease-in-out transform ${
+        showHeaderTop ? "translate-y-0 opacity-100" : "-translate-y-full opacity-100"
+      }`}
+    >
       <HeaderTop />
-      <div className="flex justify-center">
-        <Navigation />
-      </div>
-    </header>
-  );
+    </div>
+
+    {/* Navigation */}
+    <div
+      className="fixed left-0 w-full z-40 bg-white border-b border-zinc-300 shadow-md transition-all duration-300"
+      style={{ top: showHeaderTop ? `${headerTopHeight}px` : "0px" }}
+    >
+      <Navigation />
+    </div>
+
+    {/* Spacer */}
+    <div style={{ paddingTop: `${headerTopHeight + 56}px` }} /> {/* 56 = chiều cao Navigation */}
+  </>
+);
 }
 
 export default Header;

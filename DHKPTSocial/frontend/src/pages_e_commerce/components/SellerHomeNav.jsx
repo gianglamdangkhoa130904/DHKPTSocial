@@ -13,8 +13,8 @@ const SellerHomeNav = () => {
         { title: 'Sản phẩm', icon: <FaBox className="text-xl text-purple-600" />, click: '/e-commerce/seller/products' },
         // { title: 'Khuyến mãi', icon: <FaTags className="text-xl text-purple-600" />, click: '/e-commerce/seller/voucher' },
         { title: 'Đơn hàng', icon: <FaShippingFast className="text-xl text-purple-600" />, click: '/e-commerce/seller/order' },
-        { title: 'Doanh thu cửa hàng', icon: <FaChartLine className="text-xl text-purple-600" />, click: '/e-commerce/seller/revenue' },
-        { title: 'Quản lý thuế', icon: <FaFileInvoiceDollar className="text-xl text-purple-600" />, click: '/e-commerce/seller/tax' },
+        // { title: 'Doanh thu cửa hàng', icon: <FaChartLine className="text-xl text-purple-600" />, click: '/e-commerce/seller/revenue' },
+        // { title: 'Quản lý thuế', icon: <FaFileInvoiceDollar className="text-xl text-purple-600" />, click: '/e-commerce/seller/tax' },
     ];
     const changeStore = () => {
         axios.get(`https://dhkshop.onrender.com/store/manager/${Cookies.get('customerId')}`)

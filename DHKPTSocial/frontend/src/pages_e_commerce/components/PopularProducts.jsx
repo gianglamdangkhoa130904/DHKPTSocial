@@ -51,7 +51,7 @@ const PopularProducts = () => {
           </header>
 
           <div className="relative w-full">
-            {products.length >= 4 && (
+            {products.length >= 5 && (
               <button 
                 onClick={scrollLeft} 
                 className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-300 p-3 rounded-full shadow-md hover:bg-gray-400 transition duration-200 flex items-center justify-center w-10 h-10"
@@ -79,7 +79,7 @@ const PopularProducts = () => {
               ))}
             </section>
 
-            {products.length >= 4 && (
+            {products.length >= 5 && (
               <button 
                 onClick={scrollRight} 
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-300 p-3 rounded-full shadow-md hover:bg-gray-400 transition duration-200 flex items-center justify-center w-10 h-10"

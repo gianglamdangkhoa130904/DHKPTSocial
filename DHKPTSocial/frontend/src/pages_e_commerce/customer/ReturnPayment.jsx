@@ -48,6 +48,7 @@ const ReturnPayment = () => {
         
         <div className="flex flex-col gap-4">
           <button 
+            onClick={() => navigate('/e-commerce/customer/account/orders')}
             className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 px-6 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition duration-300 shadow-md"
           >
             Theo dõi đơn hàng

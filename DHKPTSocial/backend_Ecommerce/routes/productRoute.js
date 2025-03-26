@@ -60,8 +60,9 @@ router.put('/:id', async (req, res) => {
         if (!updatedProduct) {
             return res.status(404).json({ message: 'Product not found' });
         }
-        req.io.emit("productUpdated", updatedProduct);
-        res.json(updatedProduct);
+        const populatedProduct = await updatedProduct.populate('category');
+        req.io.emit("productUpdated", populatedProduct);
+        res.json(populatedProduct);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -263,6 +264,31 @@ router.get("/store/:storeId/rating", async (req, res) => {
     } catch (error) {
         console.error("Lỗi khi tính rating:", error);
         res.status(500).json({ message: "Lỗi server" });
+    }
+});
+
+router.post('/:id/comments', async (req, res) => {
+    try {
+        const { userID, rating, descriptionImages, description } = req.body;
+
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            return res.status(404).send({ message: 'Không tìm thấy sản phẩm' });
+        }
+
+        const newComment = {
+            userID,
+            rating,
+            descriptionImages,
+            description
+        };
+
+        product.comments.push(newComment);
+        await product.save();
+
+        res.status(201).send(product);
+    } catch (error) {
+        res.status(500).send({ message: 'Lỗi khi thêm bình luận', error: error.message });
     }
 });
 export default router;
