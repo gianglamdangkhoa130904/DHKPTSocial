@@ -23,7 +23,7 @@ const io = new Server(server, {
         origin: [
             "http://dhkptsocial.site", 
             "https://dhkptsocial.netlify.app",
-            "http://giyuksite.online"
+            "https://giyuksite.online"
         ], // Đảm bảo đúng cổng của frontend
         credentials: true,
     },
@@ -36,7 +36,7 @@ app.use(
         origin: [
             "http://dhkptsocial.site", 
             "https://dhkptsocial.netlify.app",
-            "http://giyuksite.online"
+            "https://giyuksite.online"
         ],
         credentials: true,
     })
