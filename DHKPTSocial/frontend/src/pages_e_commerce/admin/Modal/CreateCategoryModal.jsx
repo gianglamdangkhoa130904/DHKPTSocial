@@ -34,7 +34,7 @@ const CreateCategoryModal = ({ isOpen, onClose, onSubmit, initialData }) => {
       }
 
       // Gọi API để thêm danh mục
-      const response = await axios.post("https://dhkshop.onrender.com/categories/upload", formDataToSend, {
+      const response = await axios.post("http://localhost:1325/categories/upload", formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data", // Đặt header để hỗ trợ upload file
         },

@@ -50,7 +50,7 @@ const CreateStoreModal = ({ isOpen, onClose, onSubmit, initialData }) => {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`https://dhkshop.onrender.com/user?search=${searchTerm}`);
+      const response = await axios.get(`http://localhost:1325/user?search=${searchTerm}`);
       // Lọc kết quả chỉ dựa trên tên và email
       const filteredResults = response.data.filter(
         (user) =>
