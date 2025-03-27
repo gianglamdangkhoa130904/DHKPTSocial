@@ -79,7 +79,7 @@ const ProductList = ({listTitle, productList}) => {
           >
             {productList.map((product, index) => (
               <div 
-                  onClick={() => navigate(`/product/${product_id}`)}
+                  onClick={() => navigate(`/product/${product._id}`)}
                 key={index} 
                 className='w-[200px] flex-none bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-xl'
               >
