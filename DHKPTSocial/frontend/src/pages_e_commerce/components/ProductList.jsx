@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FaAngleLeft, FaAngleRight, FaStar, FaShoppingBag, FaHeart } from 'react-icons/fa';
-
+import { useNavigate } from 'react-router-dom';
 const ProductList = ({listTitle, productList}) => {
     const [title, setTitle] = useState("");
     const [products, setProducts] = useState([]);
     const [startIndex, setStartIndex] = useState(0);
     const [isAnimating, setIsAnimating] = useState(false);
     const sliderRef = useRef(null);
-    
+    const navigate = useNavigate();
     // Đảm bảo không vượt quá số lượng sản phẩm hiển thị
     const maxVisibleProducts = 5;
     const maxStartIndex = Math.max(0, productList.length - maxVisibleProducts);
@@ -79,6 +79,7 @@ const ProductList = ({listTitle, productList}) => {
           >
             {productList.map((product, index) => (
               <div 
+                  onClick={() => navigate(`/product/${product_id}`)}
                 key={index} 
                 className='w-[200px] flex-none bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-xl'
               >
@@ -98,11 +99,7 @@ const ProductList = ({listTitle, productList}) => {
                     <FaHeart className='text-gray-400 transition-colors duration-300 hover:text-pink-500' />
                   </button> */}
                   
-                  {/* Quick action button appearing on hover */}
-                  <div className='absolute bottom-0 left-0 right-0 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-2 flex justify-center items-center transform translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 cursor-pointer'>
-                    <FaShoppingBag className='mr-2' />
-                    <span className='font-medium'>Thêm vào giỏ</span>
-                  </div>
+                  
                 </div>
                 
                 {/* Product Info */}
