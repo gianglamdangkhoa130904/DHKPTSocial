@@ -116,7 +116,7 @@ router.post('/', async (request, response) => {
             userID: request.body.user
           };
           const article = await Article.create(newArticle);
-
+          req.io.emit("articleAdded", newArticle);
           return response.status(201).send(article);
       }
     } catch (error) {

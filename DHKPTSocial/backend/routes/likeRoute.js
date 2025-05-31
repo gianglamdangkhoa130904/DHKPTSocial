@@ -20,7 +20,7 @@ router.post('/', async (request, response) => {
           articleID: request.body.articleID
         };
         const like = await Like.create(newLike);
-
+        req.io.emit("liked", like);
         return response.status(201).send(like);
     }
   } catch (error) {
@@ -39,6 +39,7 @@ router.delete('/:id', async (request, response) => {
         return response.status(404).json({ message: 'Like not found' });
       }
   
+      req.io.emit("disliked", result);
       return response.status(200).send({ message: 'Like deleted successfully' });
     } catch (error) {
       console.log(error.message);
