@@ -16,7 +16,6 @@ const CreatePost = () => {
     const { enqueueSnackbar } = useSnackbar();
     const imgRef = useRef(null);
     useEffect(() => {
-        socket.connect()
         const id = Cookies.get('customerId');
         const name = Cookies.get('customerName');
         setUser(id);
