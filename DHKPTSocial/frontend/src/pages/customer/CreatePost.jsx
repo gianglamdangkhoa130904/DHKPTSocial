@@ -108,7 +108,7 @@ const CreatePost = () => {
                             setDescription('');
                             setLoading(false);
                             if (socketRef.current && socketRef.current.connected) {
-                                socketRef.current.emit('articleAdded', response.data);
+                                socketRef.current.emit('articleAdded', response);
                                 console.log('Emit articleAdded success');
                             } else {
                                 console.error('Socket not connected, attempting to reconnect...');
