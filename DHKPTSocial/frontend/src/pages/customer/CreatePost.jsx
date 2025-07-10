@@ -100,7 +100,7 @@ const CreatePost = () => {
                             setListMedia([]);
                             setDescription('');
                             setLoading(false);
-                            socket.emit('addedArticle', response.data);
+                            socket.emit('articleAdded', response.data);
                         } catch (error) {
                             console.error('Error uploading file:', error);
                         }
