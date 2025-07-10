@@ -5,7 +5,7 @@ import io from "socket.io-client";
 import axios from 'axios';
 import Spiner from '../../components/Spiner';
 
-const socket = io("https://dhkshop.onrender.com");
+const socket = io("https://dhkptsocial.onrender.com");
 
 const CreatePost = () => {
     const [loading, setLoading] = useState(false);
