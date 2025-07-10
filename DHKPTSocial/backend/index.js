@@ -72,10 +72,10 @@ app.get("/", (request, response) => {
 });
 
 app.use("/users", userRoute);
-app.use("/articles", (req, res, next) => { req.io = io; next();}, articleRoute);
+app.use("/articles", (request, response, next) => { request.io = io; next();}, articleRoute);
 app.use("/comments", commentRoute);
 app.use("/follows", followRoute);
-app.use("/likes", (req, res, next) => { req.io = io; next();}, likeRoute);
+app.use("/likes", (request, response, next) => { request.io = io; next();}, likeRoute);
 app.use("/notifications", notifyRoute);
 app.use("/files", fileRoute);
 app.use("/reports", reportRoute);
