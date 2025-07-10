@@ -107,21 +107,9 @@ const CreatePost = () => {
                             setListMedia([]);
                             setDescription('');
                             setLoading(false);
-                            if (socketRef.current && socketRef.current.connected) {
-                                socketRef.current.emit('articleAdded', response.data, (response) => {
-                                    console.log('📨 EMIT CALLBACK - Server response:', response);
-                                });
-                            } else {
-                                console.error('Socket not connected, attempting to reconnect...');
-                                // Thử reconnect
-                                socketRef.current.connect();
-                                
-                                // Đợi kết nối rồi emit
-                                socketRef.current.once('connect', () => {
-                                    socketRef.current.emit('articleAdded', response.data);
-                                    console.log('Emit articleAdded after reconnect');
-                                });
-                            }
+                            socketRef.current.emit('articleAdded', response.data, (response) => {
+                                console.log('📨 EMIT CALLBACK - Server response:', response);
+                            });
                         } catch (error) {
                             console.error('Error uploading file:', error);
                         }
