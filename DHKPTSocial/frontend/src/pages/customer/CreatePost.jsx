@@ -5,8 +5,6 @@ import io from "socket.io-client";
 import axios from 'axios';
 import Spiner from '../../components/Spiner';
 
-const socket = io("https://dhkptsocial.onrender.com");
-
 const CreatePost = () => {
     const [loading, setLoading] = useState(false);
     const [descriptionPost, setDescription] = useState('')
@@ -109,11 +107,19 @@ const CreatePost = () => {
                             setListMedia([]);
                             setDescription('');
                             setLoading(false);
-                            if(socketRef.current.connected){
-                                socketRef.current.emit('articleAdded', response.data); // EMIT THÀNH CÔNG
-                                console.log('Emit articleAdded');
-                            }else{
-                                console.error('Socket not connected');
+                            if (socketRef.current && socketRef.current.connected) {
+                                socketRef.current.emit('articleAdded', response.data);
+                                console.log('Emit articleAdded success');
+                            } else {
+                                console.error('Socket not connected, attempting to reconnect...');
+                                // Thử reconnect
+                                socketRef.current.connect();
+                                
+                                // Đợi kết nối rồi emit
+                                socketRef.current.once('connect', () => {
+                                    socketRef.current.emit('articleAdded', response.data);
+                                    console.log('Emit articleAdded after reconnect');
+                                });
                             }
                         } catch (error) {
                             console.error('Error uploading file:', error);
