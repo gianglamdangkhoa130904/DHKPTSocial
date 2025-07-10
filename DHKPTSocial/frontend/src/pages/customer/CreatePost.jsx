@@ -15,11 +15,21 @@ const CreatePost = () => {
     const [listMedia, setListMedia] = useState([]);
     const { enqueueSnackbar } = useSnackbar();
     const imgRef = useRef(null);
+    const socketRef = useRef(null);
     useEffect(() => {
         const id = Cookies.get('customerId');
         const name = Cookies.get('customerName');
         setUser(id);
     })
+    useEffect(() => {
+        socketRef.current = io("https://dhkptsocial.onrender.com");
+        socketRef.current.on('connect', () => {
+            console.log('Socket connected:', socketRef.current.id);
+        });
+        return () => {
+            socketRef.current.disconnect(); // Ngắt khi rời component
+        };
+    }, [])
     const handleFileChange = (e) => {
         setFile(e.target.files);
         const fileArray = e.target.files;
@@ -99,7 +109,12 @@ const CreatePost = () => {
                             setListMedia([]);
                             setDescription('');
                             setLoading(false);
-                            socket.emit('articleAdded', response.data);
+                            if(socketRef.current.connected){
+                                socketRef.current.emit('articleAdded', response.data); // EMIT THÀNH CÔNG
+                                console.log('Emit articleAdded');
+                            }else{
+                                console.error('Socket not connected');
+                            }
                         } catch (error) {
                             console.error('Error uploading file:', error);
                         }
