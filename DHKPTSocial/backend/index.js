@@ -94,7 +94,11 @@ io.on("connection", (socket) => {
         // Phát tin nhắn mới đến tất cả các client
         io.emit("newMessage", message);
     });
-
+    socket.on('articleAdded', (data) => {
+        console.log('New article added:', data);
+    
+        socket.broadcast.emit('newArticle', data); 
+    });
     // Xử lý khi client ngắt kết nối
     socket.on("disconnect", () => {
         console.log("Client disconnected:", socket.id);
