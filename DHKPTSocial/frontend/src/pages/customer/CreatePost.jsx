@@ -1,8 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react'
 import Cookies from 'js-cookie';
 import { useSnackbar } from 'notistack';
+import io from "socket.io-client";
 import axios from 'axios';
 import Spiner from '../../components/Spiner';
+
+const socket = io("https://dhkshop.onrender.com");
 
 const CreatePost = () => {
     const [loading, setLoading] = useState(false);
@@ -13,6 +16,7 @@ const CreatePost = () => {
     const { enqueueSnackbar } = useSnackbar();
     const imgRef = useRef(null);
     useEffect(() => {
+        socket.connect()
         const id = Cookies.get('customerId');
         const name = Cookies.get('customerName');
         setUser(id);
@@ -85,17 +89,18 @@ const CreatePost = () => {
                         formData.append('file', file[i]);
                         formData.append('postId', response.data._id); 
                         try {
-                            const response = await axios.post('https://dhkptsocial.onrender.com/files/upload', formData, {
+                            const responseFile = await axios.post('https://dhkptsocial.onrender.com/files/upload', formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data',
                             },
                             });
-                            console.log('Last file uploaded successfully:', response.data);
+                            console.log('Last file uploaded successfully:', responseFile.data);
                             enqueueSnackbar('Đăng tin thành công', { variant: 'success' });
                             setFile(null);
                             setListMedia([]);
                             setDescription('');
                             setLoading(false);
+                            socket.emit('addedArticle', response.data);
                         } catch (error) {
                             console.error('Error uploading file:', error);
                         }
