@@ -96,20 +96,18 @@ const CreatePost = () => {
                         formData.append('file', file[i]);
                         formData.append('postId', response.data._id); 
                         try {
-                            const responseFile = await axios.post('https://dhkptsocial.onrender.com/files/upload', formData, {
+                            const response = await axios.post('https://dhkptsocial.onrender.com/files/upload', formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data',
                             },
                             });
-                            console.log('Last file uploaded successfully:', responseFile.data);
+                            console.log('Last file uploaded successfully:', response.data);
                             enqueueSnackbar('Đăng tin thành công', { variant: 'success' });
                             setFile(null);
                             setListMedia([]);
                             setDescription('');
                             setLoading(false);
-                            socketRef.current.emit('articleAdded', response.data, (response) => {
-                                console.log('📨 EMIT CALLBACK - Server response:', response);
-                            });
+                            
                         } catch (error) {
                             console.error('Error uploading file:', error);
                         }
@@ -129,7 +127,10 @@ const CreatePost = () => {
                           console.error('Error uploading file:', error);
                         }
                     }
-                } 
+                }
+                socketRef.current.emit('articleAdded', response.data, (response) => {
+                    console.log('📨 EMIT CALLBACK - Server response:', response);
+                });
             }
             catch(error){
                 enqueueSnackbar('Đăng tin thất bại', { variant: 'error' });
