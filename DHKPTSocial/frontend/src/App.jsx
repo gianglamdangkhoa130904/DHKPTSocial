@@ -63,6 +63,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import AcceptableUsePolicy from './pages/AcceptableUsePolicy.jsx';
 
 // Đăng ký các thành phần cần thiết
 ChartJS.register(
@@ -78,6 +79,7 @@ ChartJS.register(
 const App = () => {
   return (
       <Routes>
+        <Route path='/use-policy' element={<AcceptableUsePolicy/>}/>
         {/* Social Media */}
         <Route path='/login' element={<Login/>}/>
         <Route path='/register' element={<Register/>}/>
